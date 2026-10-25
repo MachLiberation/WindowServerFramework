@@ -7,8 +7,48 @@ The public API is intentionally designed to read like a C-facing interface, with
 Examples:
 
 - `WSEWorkspaceTransition.effect = WSETransitionEffectSlide;`
+- `WSEWorkspaceTransition.effect = WSETransitionEffectCube;`
+- `WSEWorkspaceTransition.effect = WSETransitionEffectWarp;`
 - `WSEWindowAppearance.cornerRadius = 18.0;`
+- `WSEWindowBorder.enabled = true;`
+- `WSEWindowBorder.color = WSEColorSystemBlue;`
 - `WSEWorkspaceLayout.spacing = 24.0;`
+
+## WSETransitionEffect
+
+The workspace transition effect enum defines the motion style used when switching or animating between workspaces.
+
+| API | Type | What it does |
+| --- | --- | --- |
+| `WSETransitionEffectInstant` | enum | Instantly switches without animation. Useful for immediate transitions or accessibility modes. |
+| `WSETransitionEffectSlide` | enum | Slides the workspace content in a direction. |
+| `WSETransitionEffectFade` | enum | Fades one workspace into another. |
+| `WSETransitionEffectZoom` | enum | Zooms the outgoing or incoming workspace for a cinematic feel. |
+| `WSETransitionEffectCube` | enum | Simulates a cube-style 3D rotation between workspaces. |
+| `WSETransitionEffectFlip` | enum | Flips the workspace as if it were a card or page. |
+| `WSETransitionEffectPush` | enum | Pushes the incoming workspace across the screen. |
+| `WSETransitionEffectCover` | enum | Covers the current workspace with the incoming one. |
+| `WSETransitionEffectReveal` | enum | Reveals the next workspace beneath the current content. |
+| `WSETransitionEffectSwipe` | enum | Swipes the workspace across the screen with a simple directional motion. |
+| `WSETransitionEffectWarp` | enum | Distorts the workspace in a more dramatic, stylized motion. |
+| `WSETransitionEffectMorph` | enum | Morphs the visual content between states with a fluid shape transition. |
+| `WSETransitionEffectRipple` | enum | Produces a ripple-like distortion when switching workspaces. |
+| `WSETransitionEffectBlur` | enum | Blurs the destination or source view during the transition. |
+| `WSETransitionEffectGlide` | enum | Uses a soft, smooth pan or glide animation. |
+| `WSETransitionEffectCustom` | enum | Allows a developer-defined transition implementation to be plugged in. |
+
+## WSETransitionPreset
+
+Predefined transition presets that combine effect, direction, duration, and motion profile into a ready-made configuration.
+
+| API | Type | What it does |
+| --- | --- | --- |
+| `WSETransitionPresetNone` | enum | No transition; immediate switch. |
+| `WSETransitionPresetDefault` | enum | Standard transition for general workspace switching. |
+| `WSETransitionPresetSubtle` | enum | A soft and minimal animation with low visual intensity. |
+| `WSETransitionPresetCinematic` | enum | A more dramatic effect suited to presentations or immersive layouts. |
+| `WSETransitionPresetElastic` | enum | Springy motion with more bounce and energy. |
+| `WSETransitionPresetSystem` | enum | Uses a system-native style that matches the current desktop experience. |
 
 ## WSEWorkspaceTransition
 
@@ -16,12 +56,14 @@ Controls how workspace changes animate and feel.
 
 | API | Type | What it does |
 | --- | --- | --- |
-| `WSEWorkspaceTransition.effect` | enum | Chooses the workspace transition animation style. Example: `slide`, `fade`, `zoom`, or `custom`. |
+| `WSEWorkspaceTransition.effect` | `WSETransitionEffect` | Chooses the workspace transition animation style. Example: `slide`, `cube`, `warp`, `fade`, or `instant`. |
 | `WSEWorkspaceTransition.duration` | float | Sets the length of the transition animation in seconds. |
 | `WSEWorkspaceTransition.easing` | enum | Chooses the motion curve for the animation, such as `linear`, `easeInOut`, or `spring`. |
 | `WSEWorkspaceTransition.delay` | float | Adds a short delay before the transition starts. |
 | `WSEWorkspaceTransition.enabled` | bool | Enables or disables the custom workspace transition behavior. |
 | `WSEWorkspaceTransition.direction` | enum | Sets the direction of a directional transition, such as `left`, `right`, `up`, or `down`. |
+| `WSEWorkspaceTransition.intensity` | float | Sets the strength or visual impact of the transition effect. |
+| `WSEWorkspaceTransition.preset` | `WSETransitionPreset` | Applies a named preset configuration to the transition. |
 
 ## WSEWorkspaceLayout
 
@@ -48,6 +90,41 @@ Controls high-level visual styling for windows and panes.
 | `WSEWindowAppearance.borderColor` | color | Sets the border color for a window or region. |
 | `WSEWindowAppearance.borderWidth` | float | Sets the width of the border. |
 | `WSEWindowAppearance.blur` | float | Controls the amount of blur applied to the window chrome or background effect. |
+| `WSEWindowAppearance.opacity` | float | Sets the opacity of the window surface or chrome. |
+| `WSEWindowAppearance.highlight` | color | Applies a highlight tint to the edge or top of a window. |
+
+## WSEWindowBorder
+
+Controls the border that appears around windows, tiles, or desktop regions.
+
+| API | Type | What it does |
+| --- | --- | --- |
+| `WSEWindowBorder.enabled` | bool | Enables or disables the border rendering for a window. |
+| `WSEWindowBorder.width` | float | Sets the width of the border. |
+| `WSEWindowBorder.size` | float | Alias for the border thickness, used for ergonomic configuration. |
+| `WSEWindowBorder.color` | color | Sets the color of the border. |
+| `WSEWindowBorder.borderColor` | color | Alias for `color`, included for readability in some codebases. |
+| `WSEWindowBorder.style` | enum | Chooses a border style, such as `solid`, `dashed`, `glow`, or `none`. |
+| `WSEWindowBorder.opacity` | float | Sets the transparency of the border. |
+| `WSEWindowBorder.inset` | float | Controls how far the border sits inward from the edge of the window. |
+| `WSEWindowBorder.radius` | float | Sets the border radius to match the corner curvature of the window. |
+| `WSEWindowBorder.glow` | float | Controls the glow intensity around the border. |
+| `WSEWindowBorder.shadow` | bool | Enables or disables a subtle shadow around the border edge. |
+
+## WSEWindowCorner
+
+Controls window corner geometry and related visual shaping.
+
+| API | Type | What it does |
+| --- | --- | --- |
+| `WSEWindowCorner.radius` | float | Sets the corner radius of the window surface. |
+| `WSEWindowCorner.tl` | float | Sets the top-left corner radius independently. |
+| `WSEWindowCorner.tr` | float | Sets the top-right corner radius independently. |
+| `WSEWindowCorner.bl` | float | Sets the bottom-left corner radius independently. |
+| `WSEWindowCorner.br` | float | Sets the bottom-right corner radius independently. |
+| `WSEWindowCorner.enabled` | bool | Enables or disables custom corner shaping. |
+| `WSEWindowCorner.smoothing` | float | Controls how smooth the corners appear when drawn. |
+| `WSEWindowCorner.mask` | bool | Enables or disables masking to preserve the rounded shape. |
 
 ## WSEWindowBehavior
 
@@ -79,7 +156,7 @@ High-level effects that can be applied to a workspace or desktop environment.
 
 | API | Type | What it does |
 | --- | --- | --- |
-| `WSEWorkspaceEffect.type` | enum | Selects an effect for the workspace, such as `none`, `slide`, `fade`, `blur`, or `zoom`. |
+| `WSEWorkspaceEffect.type` | enum | Selects an effect for the workspace, such as `none`, `slide`, `fade`, `blur`, `zoom`, `cube`, `warp`, or `custom`. |
 | `WSEWorkspaceEffect.intensity` | float | Controls the strength of the applied effect. |
 | `WSEWorkspaceEffect.enabled` | bool | Enables or disables the workspace effect. |
 | `WSEWorkspaceEffect.duration` | float | Sets the duration of the effect animation. |
@@ -112,6 +189,8 @@ Global API settings for configuring the framework at runtime.
 - The implementation may use WindowServer, SLS, QuartzCore, CoreGraphics, or equivalent underlying system APIs internally.
 - Public APIs should remain high-level and avoid exposing raw WindowServer reverse-engineering details.
 - This design is intentionally abstract so developers can customize behavior without needing intimate knowledge of private WindowServer internals.
+- Transition effects should be additive and composable with direction, duration, easing, and intensity.
+- Border and corner APIs should remain compatible with both simple global styles and per-window overrides.
 - Future additions should remain additive and backwards-compatible when possible.
 
 ## Planned API Families
