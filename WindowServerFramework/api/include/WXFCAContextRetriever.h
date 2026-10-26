@@ -18,6 +18,9 @@ typedef uint32_t WXF_CAContextID;
 
 typedef void (*WXFCAContextRetrieverNewContextCallback)(CGWindowID window_id, WXF_CAContextID context_id);
 
+/// Returns the type identifier for WXFCAContextRetriever objects.
+WXFTypeID WXFCAContextRetrieverGetTypeID(void);
+
 /// Creates a new CAContext retriever. Returned +1 retained; release with WXFRelease.
 WXFCAContextRetrieverRef WXF_RETURNS_RETAINED WXFCAContextRetrieverCreate(void);
 
@@ -37,4 +40,4 @@ bool WXFCAContextRetrieverRegisterNewContextCallback(WXFCAContextRetrieverRef re
 }
 #endif
 
-#endif
+#endif /* !WXFCACONTEXTRETRIEVER_H */
