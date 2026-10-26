@@ -15,6 +15,8 @@
 		1819FF7A308FC14500F9C014 /* api.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = api.md; sourceTree = "<group>"; };
 		1819FF7C308FC14500F9C014 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = WindowServerFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9DF66F09308FE7D40028DE21 /* libExampleTweak.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libExampleTweak.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		9DF66F0E308FE7E90028DE21 /* Tweak.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tweak.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -46,6 +48,11 @@
 			files = (
 			);
 		};
+		9DF66F07308FE7D40028DE21 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -63,6 +70,7 @@
 				1819FF7B308FC14500F9C014 /* docs */,
 				1819FF7C308FC14500F9C014 /* README.md */,
 				18432ACB308FBCA3000F9648 /* WindowServerFramework */,
+				9DF66F0D308FE7DB0028DE21 /* ExampleTweak */,
 				18432ACA308FBCA3000F9648 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -71,14 +79,28 @@
 			isa = PBXGroup;
 			children = (
 				18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */,
+				9DF66F09308FE7D40028DE21 /* libExampleTweak.dylib */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		9DF66F0D308FE7DB0028DE21 /* ExampleTweak */ = {
+			isa = PBXGroup;
+			children = (
+				9DF66F0E308FE7E90028DE21 /* Tweak.m */,
+			);
+			path = ExampleTweak;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
 		18432AC4308FBCA3000F9648 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			files = (
+			);
+		};
+		9DF66F05308FE7D40028DE21 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			files = (
 			);
@@ -105,6 +127,21 @@
 			productReference = 18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		9DF66F08308FE7D40028DE21 /* ExampleTweak */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9DF66F0A308FE7D40028DE21 /* Build configuration list for PBXNativeTarget "ExampleTweak" */;
+			buildPhases = (
+				9DF66F05308FE7D40028DE21 /* Headers */,
+				9DF66F06308FE7D40028DE21 /* Sources */,
+				9DF66F07308FE7D40028DE21 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			name = ExampleTweak;
+			productName = ExampleTweak;
+			productReference = 9DF66F09308FE7D40028DE21 /* libExampleTweak.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -115,6 +152,9 @@
 				LastUpgradeCheck = 2710;
 				TargetAttributes = {
 					18432AC8308FBCA3000F9648 = {
+						CreatedOnToolsVersion = 27.1;
+					};
+					9DF66F08308FE7D40028DE21 = {
 						CreatedOnToolsVersion = 27.1;
 					};
 				};
@@ -134,6 +174,7 @@
 			projectRoot = "";
 			targets = (
 				18432AC8308FBCA3000F9648 /* WindowServerFramework */,
+				9DF66F08308FE7D40028DE21 /* ExampleTweak */,
 			);
 		};
 /* End PBXProject section */
@@ -150,6 +191,11 @@
 
 /* Begin PBXSourcesBuildPhase section */
 		18432AC5308FBCA3000F9648 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
+		9DF66F06308FE7D40028DE21 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			files = (
 			);
@@ -340,6 +386,30 @@
 			};
 			name = Release;
 		};
+		9DF66F0B308FE7D40028DE21 /* Debug configuration for PBXNativeTarget "ExampleTweak" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		9DF66F0C308FE7D40028DE21 /* Release configuration for PBXNativeTarget "ExampleTweak" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -356,6 +426,14 @@
 			buildConfigurations = (
 				18432AD0308FBCA3000F9648 /* Debug configuration for PBXNativeTarget "WindowServerFramework" */,
 				18432AD1308FBCA3000F9648 /* Release configuration for PBXNativeTarget "WindowServerFramework" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		9DF66F0A308FE7D40028DE21 /* Build configuration list for PBXNativeTarget "ExampleTweak" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9DF66F0B308FE7D40028DE21 /* Debug configuration for PBXNativeTarget "ExampleTweak" */,
+				9DF66F0C308FE7D40028DE21 /* Release configuration for PBXNativeTarget "ExampleTweak" */,
 			);
 			defaultConfigurationName = Release;
 		};
