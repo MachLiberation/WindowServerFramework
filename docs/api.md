@@ -2,7 +2,7 @@
 
 This document defines the public API surface for WindowServerExtensions. The goal is to provide a stable, high-level customization API for developers without requiring them to reverse engineer internal WindowServer behavior.
 
-The public API is intentionally designed to read like a C-facing interface, with names prefixed by `WSE`. The implementation may call private WindowServer or SLS internals behind the scenes, but the API itself should remain clean and understandable.
+The public API is intentionally designed to read like a C-facing interface, with names prefixed by `WSE`. The implementation may call private WindowServer internals behind the scenes, but the API itself should remain clean and understandable.
 
 Examples:
 

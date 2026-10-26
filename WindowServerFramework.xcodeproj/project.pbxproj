@@ -21,6 +21,9 @@
 		18432ACE308FBCA3000F9648 /* Exceptions for "WindowServerFramework" folder in "WindowServerFramework" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			publicHeaders = (
+				api/include/WXFBase.h,
+				api/include/WXFMach.h,
+				api/include/WXFWorkspaceTransition.h,
 				WindowServerFramework.h,
 			);
 			target = 18432AC8308FBCA3000F9648 /* WindowServerFramework */;
