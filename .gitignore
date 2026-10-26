@@ -12,6 +12,9 @@ DerivedData/
 *.xcscmbindings
 *.xcuserdata
 *.moved-aside
+xcuserdata/
+*.xcuserdatad
+*.xcuserstate
 Build/
 build/
 **/*.pbxitems
