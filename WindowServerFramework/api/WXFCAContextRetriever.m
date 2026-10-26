@@ -8,9 +8,8 @@ WXFCAContextRetrieverRef WXFCAContextRetrieverCreate(void){
     return NULL;
 }
 
-void WXFCAContextRetrieverEnumerateContextsWithBlock(WXFCAContextRetrieverRef retriever,
-                                                     void(^block)(CGWindowID window_id, WXF_CAContextID context_id, bool *stop)){
-    
+CFDictionaryRef WXFCAContextRetrieverObtainContexts(WXFCAContextRetrieverRef retriever){
+    return NULL;
 }
 
 bool WXFCAContextRetrieverRegisterNewContextCallback(WXFCAContextRetrieverRef retriever,
