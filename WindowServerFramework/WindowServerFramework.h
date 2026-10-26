@@ -9,6 +9,9 @@ FOUNDATION_EXPORT double WindowServerFrameworkVersionNumber;
 FOUNDATION_EXPORT const unsigned char WindowServerFrameworkVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <WindowServerFramework/PublicHeader.h>
-#import <WindowServerFramework/WXFWorkspaceTransition.h>
-#import <WindowServerFramework/WXFMach.h>
+#import <WindowServerFramework/WXFWorkspaceTransition.h> 
 #import <WindowServerFramework/WXFBase.h>
+
+// Call this before any work in your ammonia tweaks
+// `LoadFunction`, passing the `void *gum_interceptor`
+void SetupFramework(void * ammonia_gum_interceptor);

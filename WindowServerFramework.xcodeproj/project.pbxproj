@@ -22,7 +22,6 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			publicHeaders = (
 				api/include/WXFBase.h,
-				api/include/WXFMach.h,
 				api/include/WXFWorkspaceTransition.h,
 				WindowServerFramework.h,
 			);
