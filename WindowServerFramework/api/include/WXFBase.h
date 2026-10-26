@@ -7,6 +7,12 @@
 extern "C" {
 #endif
 
+#if __has_attribute(cf_returns_retained)
+#define WXF_RETURNS_RETAINED __attribute__((cf_returns_retained))
+#else
+#define WXF_RETURNS_RETAINED
+#endif
+
 typedef uint32_t WXFTypeID;
 #define WXFTypeIDInvalid ((WXFTypeID)UINT32_MAX)
 
