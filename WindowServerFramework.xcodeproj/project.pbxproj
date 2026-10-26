@@ -6,7 +6,14 @@
 	objectVersion = 110;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		1819FF7D308FC14500F9C014 /* api.md in Resources */ = {isa = PBXBuildFile; fileRef = 1819FF7A308FC14500F9C014 /* api.md */; };
+		1819FF7E308FC14500F9C014 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 1819FF7C308FC14500F9C014 /* README.md */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
+		1819FF7A308FC14500F9C014 /* api.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = api.md; sourceTree = "<group>"; };
+		1819FF7C308FC14500F9C014 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = WindowServerFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -40,9 +47,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1819FF7B308FC14500F9C014 /* docs */ = {
+			isa = PBXGroup;
+			children = (
+				1819FF7A308FC14500F9C014 /* api.md */,
+			);
+			path = docs;
+			sourceTree = "<group>";
+		};
 		18432ABF308FBCA3000F9648 = {
 			isa = PBXGroup;
 			children = (
+				1819FF7B308FC14500F9C014 /* docs */,
+				1819FF7C308FC14500F9C014 /* README.md */,
 				18432ACB308FBCA3000F9648 /* WindowServerFramework */,
 				18432ACA308FBCA3000F9648 /* Products */,
 			);
@@ -123,6 +140,8 @@
 		18432AC7308FBCA3000F9648 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
+				1819FF7D308FC14500F9C014 /* api.md in Resources */,
+				1819FF7E308FC14500F9C014 /* README.md in Resources */,
 			);
 		};
 /* End PBXResourcesBuildPhase section */
