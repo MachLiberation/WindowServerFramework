@@ -7,6 +7,8 @@
 extern "C" {
 #endif
 
+void HookServer(const char *Wanted, void * ReplacementFunc, void **OriginalPtr);
+
 typedef uint32_t WXFTypeID;
 #define WXFTypeIDInvalid ((WXFTypeID)UINT32_MAX)
 
