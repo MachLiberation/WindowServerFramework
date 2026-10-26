@@ -11,9 +11,30 @@ struct __WXFCAContextRetriever {
     atomic_int lock;
 };
 
+static void retriever_lock(struct __WXFCAContextRetriever *r) {
+    int expected = 0;
+    while (!atomic_compare_exchange_weak_explicit(&r->lock, &expected, 1,
+                                                  memory_order_acquire,
+                                                  memory_order_relaxed)) {
+        expected = 0;
+        sched_yield();
+    }
+}
+
+static void retriever_unlock(struct __WXFCAContextRetriever *r) {
+    atomic_store_explicit(&r->lock, 0, memory_order_release);
+}
+
+static void WXFCAContextRetrieverDestructor(WXFTypeRef ref) {
+    struct __WXFCAContextRetriever *r = (struct __WXFCAContextRetriever *)ref;
+
+    retriever_lock(r);
+    r->callback = NULL;
+}
+
 static const WXFClass kCAContextRetrieverClass = {
     .name = "WXFCAContextRetriever",
-    .destructor = NULL,
+    .destructor = WXFCAContextRetrieverDestructor,
     .equal = NULL,
 };
 
@@ -24,7 +45,7 @@ static void RegisterCAContextRetrieverClass(void) {
     gWXFCAContextRetrieverTypeID = WXFRegisterClass(&kCAContextRetrieverClass);
 }
 
-WXFTypeID WXFWorkspaceTransitionGetTypeID(void) {
+WXFTypeID WXFCAContextRetrieverGetTypeID(void) {
     pthread_once(&gCAContextRetrieverOnce, RegisterCAContextRetrieverClass);
     return gWXFCAContextRetrieverTypeID;
 }
@@ -36,6 +57,9 @@ WXFCAContextRetrieverRef WXFCAContextRetrieverCreate(void) {
     if (!t)
         return NULL;
     
+    atomic_init(&t->lock, 0);
+    t->callback = NULL;
+    
     return t;
 }
 
@@ -45,5 +69,13 @@ CFDictionaryRef WXFCAContextRetrieverObtainContexts(WXFCAContextRetrieverRef ret
 
 bool WXFCAContextRetrieverRegisterNewContextCallback(WXFCAContextRetrieverRef retriever,
                                                      WXFCAContextRetrieverNewContextCallback callback){
+    if (!retriever || !callback)
+        return false;
+    
+    WXFRetain(retriever);
+    retriever_lock(retriever);
+    retriever->callback = callback;
+    retriever_unlock(retriever);
+    WXFRelease(retriever);
     return true;
 }
