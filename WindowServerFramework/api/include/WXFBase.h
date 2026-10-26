@@ -12,8 +12,11 @@ typedef uint32_t WXFTypeID;
 
 typedef const void *WXFTypeRef;
 
+///Retains a WXFType object.
 WXFTypeRef WXFRetain(WXFTypeRef obj);
+///Releases (decrements) a WXFType object's retain count. When the count reaches 0, it is deallocated.
 void       WXFRelease(WXFTypeRef obj);
+///Gets the WXFTypeID for the object.
 WXFTypeID  WXFGetTypeID(WXFTypeRef obj);
 
 #ifdef __cplusplus
