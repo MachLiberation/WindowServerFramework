@@ -104,7 +104,7 @@ typedef struct {
 /// The callbacks of a provider, in the style of CFRunLoopSourceContext. All are optional. They are
 /// called on WindowServer's main thread (events on its event thread), so keep them quick.
 typedef struct {
-    uint32_t version;       // 0
+    uint32_t version;       // 0, or 1 to use the fields from `didReload` on
     void    *info;          // passed to every callback
     const void *(*retain)(const void *info);    // called when the provider is created
     void   (*release)(const void *info);        // called when it is destroyed
@@ -133,7 +133,24 @@ typedef struct {
 
     /// The windows are back and the session is over.
     void   (*didEnd)(WXFExposeSessionRef session, void *info);
+
+    // Version 1 and later.
+
+    /// The set of windows changed (see WXFExposeSessionReload). Items were rebuilt: indices are new,
+    /// windows that stayed keep their layout, new ones hold their natural layout.
+    void   (*didReload)(WXFExposeSessionRef session, void *info);
+    /// WXFExposeOption flags.
+    uint32_t options;
 } WXFExposeCallbacks;
+
+typedef enum {
+    /// Input the provider doesn't use goes on to the applications instead of being swallowed, so
+    /// the windows stay usable while the view is up. Clicks and keys reach the windows as they are
+    /// laid out (WindowServer hit-tests through a window's transform); the default behaviour of
+    /// Escape and of clicks (cancel, select) is off, so the view ends only through WXFExposeEnd or
+    /// control+option+command+escape. Needs `version` 1.
+    WXFExposeOptionPassInput = 1 << 0,
+} WXFExposeOption;
 
 /// Creates a provider. The callbacks are copied. +1 retained; release with WXFRelease.
 WXFExposeProviderRef WXFExposeProviderCreate(const WXFExposeCallbacks *callbacks);
@@ -151,6 +168,15 @@ void WXFExposeEnd(WXFExposeSessionRef session, WXFExposeEndReason reason, WXFExp
 
 /// The session that is up, or NULL.
 WXFExposeSessionRef WXFExposeGetActiveSession(void);
+
+/// Makes the item's window the focused one: its application becomes the front application and the
+/// window is ordered to the front, while the view stays up. Keys then go to it.
+void WXFExposeSessionActivateItem(WXFExposeSessionRef session, WXFExposeItemRef item);
+
+/// Looks at the windows again. If the set changed (a window opened, closed, moved to another
+/// display) the items are rebuilt and didReload is called; otherwise nothing happens. For a view that
+/// stays up, call it now and then (a timer through WXFScheduleCallback). @return true if rebuilt.
+bool WXFExposeSessionReload(WXFExposeSessionRef session);
 
 // MARK: Session
 

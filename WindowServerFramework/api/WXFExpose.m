@@ -54,6 +54,7 @@ struct __WXFExposeSession {
     WXFExposeProviderRef provider;
     WXFExposeScope scope;
     CGRect bounds;
+    WXFDisplayRef display;
     struct __WXFExposeItem *items;
     long itemCount;
     long *stack;            // item indices as stacked on screen, front first
@@ -96,10 +97,15 @@ WXFExposeProviderRef WXFExposeProviderCreate(const WXFExposeCallbacks *callbacks
     if (!callbacks) return NULL;
     struct __WXFExposeProvider *p = (struct __WXFExposeProvider *)WXFCreateInstance(gProviderTypeID, sizeof *p);
     if (!p) return NULL;
-    p->cb = *callbacks;
+    // Version 0 callers were built against a struct that ends before the fields added in version 1.
+    memcpy(&p->cb, callbacks, callbacks->version >= 1 ? sizeof p->cb : offsetof(WXFExposeCallbacks, didReload));
     if (p->cb.retain) p->cb.info = (void *)p->cb.retain(p->cb.info);
     return p;
 }
+
+static bool Collect(WXFExposeProviderRef provider, WXFExposeScope scope, WXFDisplayRef display,
+                    struct __WXFExposeItem **outItems, long *outCount,
+                    struct __WXFExposeBackground **outBg, long *outBgCount);
 
 static os_log_t Log(void) {
     static os_log_t log;
@@ -416,6 +422,67 @@ void WXFExposeEnd(WXFExposeSessionRef s, WXFExposeEndReason reason, WXFExposeIte
 
 WXFExposeSessionRef WXFExposeGetActiveSession(void) { return gActive; }
 
+void WXFExposeSessionActivateItem(WXFExposeSessionRef s, WXFExposeItemRef item) {
+    if (!s || s != gActive || s->ending || !item) return;
+    WXFActivateWindowOwner(WXFWindowFromID(item->windowID));
+    WXFOrderWindow(item->windowID, WXFOrderAbove, 0);
+    s->restacked = true;
+}
+
+bool WXFExposeSessionReload(WXFExposeSessionRef s) {
+    if (!s || s != gActive || s->ending) return false;
+    struct __WXFExposeItem *items;
+    struct __WXFExposeBackground *bg;
+    long n, nbg;
+    if (!Collect(s->provider, s->scope, s->display, &items, &n, &bg, &nbg)) return false;
+
+    // Nothing to do if the same windows take part, in the same order.
+    bool same = n == s->itemCount;
+    for (long i = 0; same && i < n; i++) same = items[i].windowID == s->items[i].windowID;
+    if (same) {
+        free(items);
+        free(bg);
+        return false;
+    }
+
+    // Windows that stay keep what they have; the ones that left get their transform back.
+    for (long i = 0; i < n; i++) {
+        for (long j = 0; j < s->itemCount; j++) {
+            if (s->items[j].windowID != items[i].windowID) continue;
+            struct __WXFExposeItem *old = &s->items[j];
+            items[i].layout = old->layout;
+            items[i].applied = old->applied;
+            items[i].originalAlpha = old->originalAlpha;
+            items[i].touched = old->touched;
+            items[i].dirty = true;
+            old->windowID = 0;          // taken over
+            break;
+        }
+    }
+    for (long j = 0; j < s->itemCount; j++)
+        if (s->items[j].windowID) RestoreItem(&s->items[j]);
+    // Backgrounds start over; the provider sets their alpha again in didReload / the next layout.
+    RestoreBackground(s);
+
+    free(s->items);
+    free(s->stack);
+    free(s->bg);
+    long *stack = malloc(n * sizeof *stack);
+    for (long i = 0; i < n; i++) stack[i] = i;
+    s->items = items;
+    s->itemCount = n;
+    s->stack = stack;
+    s->bg = bg;
+    s->bgCount = nbg;
+    os_log(Log(), "WXF expose: reloaded, %ld windows", n);
+
+    const WXFExposeCallbacks *cb = &s->provider->cb;
+    if (cb->version >= 1 && cb->didReload) cb->didReload(s, cb->info);
+    FlushDirty(s);
+    ScheduleTick(s, WXFCurrentTime());
+    return true;
+}
+
 // Input while the view is up.
 enum { kVKEscape = 53 };
 
@@ -450,6 +517,7 @@ static WXFEventDisposition HandleEvent(WXFEventRef event, void *userInfo) {
         return WXFEventDispositionConsume;
     }
     if (type == WXFEventTypeFlagsChanged) return WXFEventDispositionPass;
+    if (cb->version >= 1 && (cb->options & WXFExposeOptionPassInput)) return WXFEventDispositionPass;
 
     if (!s->ending) {
         if (type == WXFEventTypeKeyDown && WXFEventGetKeyCode(event) == kVKEscape) {
@@ -463,27 +531,15 @@ static WXFEventDisposition HandleEvent(WXFEventRef event, void *userInfo) {
     return WXFEventDispositionConsume;
 }
 
-WXFExposeSessionRef WXFExposeBegin(WXFExposeProviderRef provider, WXFExposeScope scope) {
-    if (!provider || gActive || !WXFIsFrameworkSetUp() ||
-        !WXFMiscIsAvailable(WXFMiscFeatureCore | WXFMiscFeatureCursor | WXFMiscFeatureDisplays |
-                            WXFMiscFeatureTransform | WXFMiscFeatureWindowList))
-        return NULL;
-    if (gHandler == WXFEventHandlerIDInvalid)
-        gHandler = WXFEventAddHandler(WXFEventTypeAll, HandleEvent, NULL);
-    if (gHandler == WXFEventHandlerIDInvalid) return NULL;
-
-    // The display under the cursor.
-    CGPoint cursor;
-    WXFGetCursorLocation(&cursor);
-    WXFDisplayRef display = WXFDisplayForPoint(cursor);
-    if (!display) display = WXFDisplayGetMain();
-    if (!display) return NULL;
-    CGRect bounds = WXFDisplayGetBounds(display);
-
+// Lists the windows on `display`: those that take part become items (frontmost first), the rest
+// backgrounds. Both arrays are malloc'd; returns false (and frees them) if there is no item.
+static bool Collect(WXFExposeProviderRef provider, WXFExposeScope scope, WXFDisplayRef display,
+                    struct __WXFExposeItem **outItems, long *outCount,
+                    struct __WXFExposeBackground **outBg, long *outBgCount) {
     long count;
     CGXWindow *cursorWindow;
     CGXWindow **windows = WXFCopyWindowList(WXFWindowListVisible, &count, &cursorWindow);
-    if (!windows) return NULL;
+    if (!windows) return false;
 
     struct __WXFExposeItem *items = calloc(count, sizeof *items);
     struct __WXFExposeBackground *bg = calloc(count, sizeof *bg);
@@ -533,8 +589,37 @@ WXFExposeSessionRef WXFExposeBegin(WXFExposeProviderRef provider, WXFExposeScope
     if (!items || !bg || n == 0) {
         free(items);
         free(bg);
-        return NULL;
+        return false;
     }
+    *outItems = items;
+    *outCount = n;
+    *outBg = bg;
+    *outBgCount = nbg;
+    return true;
+
+}
+
+WXFExposeSessionRef WXFExposeBegin(WXFExposeProviderRef provider, WXFExposeScope scope) {
+    if (!provider || gActive || !WXFIsFrameworkSetUp() ||
+        !WXFMiscIsAvailable(WXFMiscFeatureCore | WXFMiscFeatureCursor | WXFMiscFeatureDisplays |
+                            WXFMiscFeatureTransform | WXFMiscFeatureWindowList))
+        return NULL;
+    if (gHandler == WXFEventHandlerIDInvalid)
+        gHandler = WXFEventAddHandler(WXFEventTypeAll, HandleEvent, NULL);
+    if (gHandler == WXFEventHandlerIDInvalid) return NULL;
+
+    // The display under the cursor.
+    CGPoint cursor;
+    WXFGetCursorLocation(&cursor);
+    WXFDisplayRef display = WXFDisplayForPoint(cursor);
+    if (!display) display = WXFDisplayGetMain();
+    if (!display) return NULL;
+    CGRect bounds = WXFDisplayGetBounds(display);
+
+    struct __WXFExposeItem *items;
+    struct __WXFExposeBackground *bg;
+    long n, nbg;
+    if (!Collect(provider, scope, display, &items, &n, &bg, &nbg)) return NULL;
 
     pthread_once(&gClassOnce, RegisterClasses);
     struct __WXFExposeSession *s = (struct __WXFExposeSession *)WXFCreateInstance(gSessionTypeID, sizeof *s);
@@ -552,20 +637,22 @@ WXFExposeSessionRef WXFExposeBegin(WXFExposeProviderRef provider, WXFExposeScope
     s->provider = (WXFExposeProviderRef)WXFRetain(provider);
     s->scope = scope;
     s->bounds = bounds;
+    s->display = display;
     s->items = items;
     s->itemCount = n;
     s->beginTime = WXFCurrentTime();
     gActive = s;
     gGeneration++;
     gSwallowMouseUp = false;
-    os_log(Log(), "WXF expose: began with %ld windows on %.0fx%.0f at %.0f,%.0f (scope %d, front %p)", n,
-           bounds.size.width, bounds.size.height, bounds.origin.x, bounds.origin.y, (int)scope, front);
+    os_log(Log(), "WXF expose: began with %ld windows on %.0fx%.0f at %.0f,%.0f (scope %d)", n,
+           bounds.size.width, bounds.size.height, bounds.origin.x, bounds.origin.y, (int)scope);
     for (long i = 0; i < n; i++)
         os_log(Log(), "WXF expose: item %ld window %x frame %.0f,%.0f %.0fx%.0f", i, items[i].windowID,
                items[i].frame.origin.x, items[i].frame.origin.y, items[i].frame.size.width,
                items[i].frame.size.height);
 
     WXFLogVisibleOrderMode();
+    const WXFExposeCallbacks *cb = &provider->cb;
     if (cb->didBegin) cb->didBegin(s, cb->info);
     FlushDirty(s);
     ScheduleTick(s, s->beginTime);

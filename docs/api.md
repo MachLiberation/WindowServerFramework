@@ -294,6 +294,18 @@ or a swipe down only the front application's. The fly-in follows the fingers, an
 while the view is up closes it. Arrows, scrolling and clicks move through the row, Return or a
 click on the middle card selects it, and Escape cancels.
 
+**Example.** `NiriKnockoffExample` is niri, the scrolling tiling window manager, and is always on:
+the view begins by itself, follows windows opening and closing, and lets input through to the
+windows. It uses three things from this API: `WXFExposeOptionPassInput` (callbacks `version` 1; input the
+provider doesn't use goes on to the windows, and WindowServer hit-tests through a window's transform,
+`_WSWindowHitTest` -> `CGXTransformPointToWindow`, so clicks land where the window is drawn),
+`WXFExposeSessionActivateItem` (focus a window while the view is up) and `WXFExposeSessionReload` with
+the `didReload` callback (called from a `WXFScheduleCallback` timer). Windows sit in per-application
+columns on an endless strip scaled to fit, not resized. Control+Option is the modifier: arrows or hjkl
+move focus, Shift moves the column or window, `,` and `.` pull a window into the left column or push it
+out, R cycles the width, Tab is the overview, N turns the strip off and on. A sideways swipe scrolls the
+strip, a vertical one toggles the overview, and a click focuses that column.
+
 **Limitations.** There is no backdrop, no labels, no Spaces strip, and minimized windows are not
 shown. The Dock's shortcuts and swipes still reach the Dock unless you
 consume them as events.
