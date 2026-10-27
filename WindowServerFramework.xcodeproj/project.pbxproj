@@ -9,11 +9,13 @@
 /* Begin PBXBuildFile section */
 		1819FF7D308FC14500F9C014 /* api.md in Resources */ = {isa = PBXBuildFile; fileRef = 1819FF7A308FC14500F9C014 /* api.md */; };
 		1819FF7E308FC14500F9C014 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 1819FF7C308FC14500F9C014 /* README.md */; };
+		181A9CE63090F6BD00F2DA1D /* Tweak.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF6711B309100010028DE21 /* Tweak.m */; };
+		181A9CE73090F6BD00F2DA1D /* WindowServerFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */; };
 		9DF66F12308FE7F00028DE21 /* Tweak.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF66F0E308FE7E90028DE21 /* Tweak.m */; };
 		9DF67018309014660028DE21 /* WindowServerFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */; };
 		9DF6701D309100010028DE21 /* Tweak.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF6701B309100010028DE21 /* Tweak.m */; };
-		9DF6711D309100010028DE21 /* Tweak.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF6711B309100010028DE21 /* Tweak.m */; };
 		9DF6701E309100010028DE21 /* WindowServerFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */; };
+		9DF6711D309100010028DE21 /* Tweak.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF6711B309100010028DE21 /* Tweak.m */; };
 		9DF6711E309100010028DE21 /* WindowServerFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */; };
 /* End PBXBuildFile section */
 
@@ -27,8 +29,8 @@
 		9DF66F0E308FE7E90028DE21 /* Tweak.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tweak.m; sourceTree = "<group>"; };
 		9DF66F10308FE7F00028DE21 /* DragShaderExample.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = DragShaderExample.metal; sourceTree = "<group>"; };
 		9DF6701A309100010028DE21 /* libExposeExample.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libExposeExample.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		9DF6711A309100010028DE21 /* libMenuBarExample.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libMenuBarExample.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DF6701B309100010028DE21 /* Tweak.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tweak.m; sourceTree = "<group>"; };
+		9DF6711A309100010028DE21 /* libMenuBarExample.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libMenuBarExample.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DF6711B309100010028DE21 /* Tweak.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tweak.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -39,13 +41,13 @@
 				api/include/CGXWindow.h,
 				api/include/WXFBase.h,
 				api/include/WXFCAContextRetriever.h,
-				api/include/WXFWorkspaceTransition.h,
 				api/include/WXFDrag.h,
 				api/include/WXFDragAnimation.h,
 				api/include/WXFEvent.h,
 				api/include/WXFExpose.h,
 				api/include/WXFMenuBar.h,
 				api/include/WXFMisc.h,
+				api/include/WXFWorkspaceTransition.h,
 				WindowServerFramework.h,
 			);
 			target = 18432AC8308FBCA3000F9648 /* WindowServerFramework */;
@@ -85,7 +87,7 @@
 		9DF67121309100010028DE21 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
-				9DF6711E309100010028DE21 /* WindowServerFramework.framework in Frameworks */,
+				181A9CE73090F6BD00F2DA1D /* WindowServerFramework.framework in Frameworks */,
 			);
 		};
 /* End PBXFrameworksBuildPhase section */
@@ -350,7 +352,7 @@
 		9DF67120309100010028DE21 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			files = (
-				9DF6711D309100010028DE21 /* Tweak.m in Sources */,
+				181A9CE63090F6BD00F2DA1D /* Tweak.m in Sources */,
 			);
 		};
 /* End PBXSourcesBuildPhase section */
@@ -604,20 +606,6 @@
 			};
 			name = Debug;
 		};
-		9DF67124309100010028DE21 /* Debug configuration for PBXNativeTarget "MenuBarExample" */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				EXECUTABLE_PREFIX = lib;
-				MACH_O_TYPE = mh_dylib;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-			};
-			name = Debug;
-		};
 		9DF67025309100010028DE21 /* Release configuration for PBXNativeTarget "ExposeExample" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -631,6 +619,20 @@
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
+		};
+		9DF67124309100010028DE21 /* Debug configuration for PBXNativeTarget "MenuBarExample" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				MACH_O_TYPE = mh_dylib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
 		};
 		9DF67125309100010028DE21 /* Release configuration for PBXNativeTarget "MenuBarExample" */ = {
 			isa = XCBuildConfiguration;
