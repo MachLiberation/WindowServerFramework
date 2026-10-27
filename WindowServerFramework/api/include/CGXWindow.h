@@ -24,6 +24,8 @@ typedef struct WFXTransform3D {
     uint8_t _storage[0x80];
 } WFXTransform3D;
 
+
+/// TODO: make version dependant somehow xd
 /// A WindowServer window as laid out in the WindowServer process.
 /// Field offsets are annotated and must be preserved.
 typedef struct CGXWindow {
