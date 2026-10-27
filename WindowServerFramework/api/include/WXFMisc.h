@@ -53,7 +53,9 @@ typedef enum {
     WXFMiscFeatureShape      = 1 << 7,
     /// WXFRebuildVisibleOrder. Missing pieces make it do less, not fail.
     WXFMiscFeatureReorder    = 1 << 8,
-    WXFMiscFeatureAll        = (1 << 9) - 1,
+    /// WXFWindowCreate, WXFWindowBindCAContext, WXFWindowRelease.
+    WXFMiscFeatureCreate     = 1 << 9,
+    WXFMiscFeatureAll        = (1 << 10) - 1,
 } WXFMiscFeature;
 
 /// Whether every function the given groups (OR them together) need was found. The first time a
@@ -157,6 +159,10 @@ void  WXFWindowSetAlpha(CGXWindow *window, float alpha);
 /// directly. Does nothing if the function is missing.
 void  WXFWindowUpdate(CGXWindow *window);
 
+/// Like WXFWindowUpdate, but as `connection` (any live connection). For a window made by
+/// WXFWindowCreate, which has none of its own.
+void  WXFWindowUpdateAs(CGXWindow *window, CGXConnection *connection);
+
 // --- Transforms -----------------------------------------------------------------------------
 // Needs WXFMiscFeatureTransform. These write the slot the Dock uses for Exposé; a window has one.
 
@@ -201,6 +207,24 @@ void WXFRebuildVisibleOrder(const uint32_t *windowIDs, long count);
 /// Logs how the visible list is built (see docs/expose-internals.md), for debugging a
 /// reordering that doesn't show.
 void WXFLogVisibleOrderMode(void);
+
+// --- Making windows -------------------------------------------------------------------------
+// Windows of the tweak's own that show an application's CAContext (see WXFCAContextRetriever).
+// Need WXFMiscFeatureCreate. Such a window has no owning connection, so WXFCAContextRetriever does
+// not report it as an application window. Order it with WXFOrderWindowList, passing the
+// connection of the window it goes next to.
+
+/// Makes a window covering `frame` (screen coordinates), not yet ordered in and showing nothing.
+/// NULL if it can't be made. Release it with WXFWindowRelease.
+CGXWindow *WXFWindowCreate(CGRect frame);
+
+/// Makes the window show the CAContext `contextID`, live. Call again to switch to another one.
+/// Does not repaint the window when the source draws; use WXFWindowUpdateAs for that.
+void WXFWindowBindCAContext(CGXWindow *window, uint32_t contextID);
+
+/// Frees a window made by WXFWindowCreate. Order it out first, and let a frame go by before
+/// releasing: the server may still be drawing it.
+void WXFWindowRelease(CGXWindow *window);
 
 // --- Applications ---------------------------------------------------------------------------
 // Need WXFMiscFeatureActivation.

@@ -340,9 +340,9 @@ retriever has its own callback. Evidence in [cacontext-internals.md](cacontext-i
 
 `CAContextExample` is built on it: with Control + Option + Command held, `C` over a window spawns a
 live clone of it beside it (a window of the tweak's own, bound to the source's context), `C` over a
-clone removes it, and `R` removes every clone. The framework only supplies the ids; making the window
-is in the tweak. A window that only shows someone else's context is not repainted when the source
-changes, so the example invalidates each clone 60 times a second (`_updateWindow`, see the internals doc).
+clone removes it, and `R` removes every clone. The retriever supplies the ids; the clone window comes from
+the Misc calls `WXFWindowCreate`, `WXFWindowBindCAContext` and `WXFWindowRelease`. A window that only shows someone else's context is not repainted when the source
+changes, so the example invalidates each clone 60 times a second (`WXFWindowUpdateAs`, see the internals doc).
 
 ## Misc
 
@@ -360,9 +360,10 @@ shader is using it will fight with it.
 | Clock | `WXFCurrentTime()`, `WXFScheduleCallback(fn, info, when)` (runs once, on the main thread) |
 | Cursor and displays | `WXFGetCursorLocation`, `WXFDisplayForPoint`, `WXFDisplayGetMain`, `WXFDisplayGetBounds`, `WXFWindowGetDisplay` |
 | Windows | `WXFWindowFromID`, `WXFWindowGetFrame` (ignores transforms), `WXFWindowGetClippedFrame` (with shadow), `WXFWindowGetScreenRect` (no shadow), `WXFWindowGetOwnerConnectionID`, `WXFCopyWindowList` |
-| Alpha | `WXFWindowGetAlphaFactor`, `WXFWindowSetAlpha`, `WXFWindowUpdate` |
+| Alpha and repaint | `WXFWindowGetAlphaFactor`, `WXFWindowSetAlpha`, `WXFWindowUpdate`, `WXFWindowUpdateAs` (as another connection, for a window with none) |
 | Transforms | `WXFWindowApplyTransform(window, forward)` (give it the matrix that moves the window; it stores the inverse WindowServer wants), `WXFWindowResetTransform`, `WXFWindowSetTransform` (the stored matrix as is) |
 | Moving and ordering | `WXFWindowMoveBy`, `WXFOrderWindow`, `WXFOrderWindowList`, `WXFRebuildVisibleOrder`, `WXFLogVisibleOrderMode` |
+| Making windows | `WXFWindowCreate(frame)` (a connection-less window that shows a CAContext), `WXFWindowBindCAContext`, `WXFWindowRelease` |
 | Applications | `WXFForegroundConnection`, `WXFActivateWindowOwner` |
 
 ```c

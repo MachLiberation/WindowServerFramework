@@ -12,54 +12,20 @@
 //     over a clone, removes that clone.
 //   Control + Option + Command + R removes every clone.
 //
-// The framework only reports the ids. The window is made here, from what docs/cacontext-internals.md
-// records: CGXWindow::new_window(NULL, 5, region, 6145) as WS::create_shield_window_common makes
-// one, then WSWindowBindRemoteCAClientContext, which is what _XCreateWindow does for an
-// application's window. WindowServer does not repaint a window that only shows somebody else's
-// commits (the source's commits invalidate the source's region), so a 60 Hz pulse invalidates each
-// clone's region itself.
+// The retriever only reports the ids; the window comes from WXFWindowCreate and
+// WXFWindowBindCAContext (WXFMisc.h; docs/cacontext-internals.md says what they do). WindowServer
+// does not repaint a window that only shows somebody else's commits (the source's commits
+// invalidate the source's region), so a 60 Hz pulse invalidates each clone's region itself.
 
 #include <WindowServerFramework/WindowServerFramework.h>
 #include <WindowServerFramework/WXFEvent.h>
 #include <WindowServerFramework/WXFMisc.h>
 #include <WindowServerFramework/WXFCAContextRetriever.h>
-#include <dlfcn.h>
 #include <os/log.h>
 
 enum { kVKR = 15, kVKC = 8 };
-enum { kWindowTypeCA = 5, kCloneFlags = 6145 };
 
 static WXFCAContextRetrieverRef gRetriever;
-
-// --- Server functions -----------------------------------------------------------------------
-typedef CGXWindow *(*NewWindowFn)(CGXConnection *connection, int type, const void *region, int flags);
-typedef void (*BindFn)(CGXWindow *window, uint32_t contextID);
-typedef void (*ReleaseFn)(CGXWindow *window);
-typedef void (*UpdateWindowFn)(CGXConnection *connection, CGXWindow *window);
-typedef const void *(*RegionFn)(CGRect rect);
-
-static NewWindowFn gNewWindow;
-static BindFn gBind;
-static ReleaseFn gRelease;
-static UpdateWindowFn gUpdateWindow;
-static RegionFn gRegionWithRect;
-
-static bool ResolveSymbols(void) {
-    static bool tried, ok;
-    if (tried) return ok;
-    tried = true;
-    gNewWindow = (NewWindowFn)WXFResolveServerSymbol(
-        "__ZN9CGXWindow10new_windowEP13CGXConnection14CGSBackingTypeP15CGSRegionObjecti");
-    gBind = (BindFn)WXFResolveServerSymbol("_WSWindowBindRemoteCAClientContext");
-    gRelease = (ReleaseFn)WXFResolveServerSymbol("_WSSystemWindowRelease");
-    gUpdateWindow = (UpdateWindowFn)WXFResolveServerSymbol("_updateWindow");
-    gRegionWithRect = (RegionFn)dlsym(RTLD_DEFAULT, "CGRegionCreateWithRect");
-    ok = gNewWindow && gBind && gRelease && gUpdateWindow && gRegionWithRect &&
-         WXFMiscIsAvailable(WXFMiscFeatureCore | WXFMiscFeatureDisplays);
-    os_log(OS_LOG_DEFAULT, "WXF cacontext example: symbols new_window %p bind %p release %p update %p region %p -> %d",
-           gNewWindow, gBind, gRelease, gUpdateWindow, gRegionWithRect, ok);
-    return ok;
-}
 
 // --- Contexts -------------------------------------------------------------------------------
 static uint32_t ContextForWindow(uint32_t windowID) {
@@ -143,26 +109,23 @@ static void StartPulse(void);
 static void SpawnClone(uint32_t sourceID) {
     CGXWindow *source = WXFWindowFromID(sourceID);
     uint32_t context = ContextForWindow(sourceID);
-    if (!source || !context || gCloneCount >= MAX_CLONES || !ResolveSymbols()) {
+    if (!source || !context || gCloneCount >= MAX_CLONES || !WXFMiscIsAvailable(WXFMiscFeatureCore | WXFMiscFeatureDisplays | WXFMiscFeatureCreate)) {
         os_log(OS_LOG_DEFAULT, "WXF cacontext example: can't clone window %u", sourceID);
         return;
     }
     CGRect frame = ClonePlacement(source);
     if (frame.size.width < 1 || frame.size.height < 1) return;
 
-    // The window is made with no connection, like the shield windows. The framework's Bind hook
-    // does not report a window without one, so a clone is not mistaken for an application window.
-    const void *region = gRegionWithRect(frame);
-    if (!region) return;
-    CGXWindow *clone = gNewWindow(NULL, kWindowTypeCA, region, kCloneFlags);
-    CFRelease(region);
+    // A window with no connection, so the framework's Bind hook does not report the clone as an
+    // application window.
+    CGXWindow *clone = WXFWindowCreate(frame);
     if (!clone) {
-        os_log(OS_LOG_DEFAULT, "WXF cacontext example: new_window failed");
+        os_log(OS_LOG_DEFAULT, "WXF cacontext example: WXFWindowCreate failed");
         return;
     }
     os_log(OS_LOG_DEFAULT, "WXF cacontext example: created window %u type %u level %d, binding context %u",
            clone->window_id, clone->window_type, clone->level, context);
-    gBind(clone, context);
+    WXFWindowBindCAContext(clone, context);
 
     uint32_t wid = clone->window_id, relative = sourceID;
     WXFOrderOp op = WXFOrderAbove;
@@ -181,7 +144,7 @@ static void SpawnClone(uint32_t sourceID) {
 // still have a frame of it in flight.
 static void ReleaseLater(void *info, double now) {
     (void)now;
-    gRelease((CGXWindow *)info);
+    WXFWindowRelease((CGXWindow *)info);
 }
 
 static void DestroyClone(int index) {
@@ -216,7 +179,7 @@ static void Pulse(void *info, double now) {
         Clone *c = &gClones[i];
         CGXWindow *source = WXFWindowFromID(c->sourceID);
         if (!source) { DestroyClone(i); continue; }
-        gUpdateWindow(source->connection, c->window);
+        WXFWindowUpdateAs(c->window, source->connection);
     }
     if (gCloneCount == 0) {
         gPulsing = false;
@@ -238,7 +201,7 @@ static void StartPulse(void) {
 static void NewContext(CGWindowID window, WXF_CAContextID context) {
     for (int i = 0; i < gCloneCount; i++)
         if (gClones[i].sourceID == window && WXFWindowFromID(gClones[i].windowID) == gClones[i].window)
-            gBind(gClones[i].window, context);
+            WXFWindowBindCAContext(gClones[i].window, context);
 }
 
 // --- Keys -----------------------------------------------------------------------------------

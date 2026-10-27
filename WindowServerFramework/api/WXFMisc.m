@@ -38,6 +38,10 @@ typedef int64_t (*SetFrontProcessFn)(uint64_t psn, const void *event, uint32_t f
 typedef void (*DidChangeOrderFn)(int type, void *data, uint32_t length, void *ctx);
 typedef void *(*GetWorkspaceDataFn)(void *session);
 typedef void (*UpdateVisibleWorkspaceOrderingFn)(void);
+typedef CGXWindow *(*NewWindowFn)(CGXConnection *, int, const void *, int);
+typedef void (*BindContextFn)(CGXWindow *, uint32_t);
+typedef void (*ReleaseWindowFn)(CGXWindow *);
+typedef const void *(*RegionWithRectFn)(CGRect);
 
 static WindowByIDFn gWindowByID;
 static WindowRectFn gFrameBounds, gClippedFrameBounds, gScreenRect;
@@ -59,6 +63,10 @@ static SetFrontProcessFn gSetFrontProcess;
 static DidChangeOrderFn gDidChangeOrder;
 static GetWorkspaceDataFn gGetWorkspaceData;
 static UpdateVisibleWorkspaceOrderingFn gUpdateVisibleWorkspaceOrdering;
+static NewWindowFn gNewWindow;
+static BindContextFn gBindContext;
+static ReleaseWindowFn gReleaseWindow;
+static RegionWithRectFn gRegionWithRect;
 static void *const *gSessionControlRef;     // the data symbol ___sessionControlRef (3 underscores)
 
 static os_log_t Log(void) {
@@ -105,6 +113,13 @@ static const SymbolRow kSymbols[] = {
     ROW("_CGSessionGetWorkspaceData",             gGetWorkspaceData,  0),
     ROW("__ZL39spaces_did_change_window_order_callback19CGSNotificationTypePvjS0_",
                                                   gDidChangeOrder,    WXFMiscFeatureReorder),
+    // Making windows: CGXWindow::new_window as WS::create_shield_window_common calls it,
+    // WSWindowBindRemoteCAClientContext as _XCreateWindow does, WSSystemWindowRelease as the drag
+    // clone is freed. docs/cacontext-internals.md.
+    ROW("__ZN9CGXWindow10new_windowEP13CGXConnection14CGSBackingTypeP15CGSRegionObjecti",
+                                                  gNewWindow,         WXFMiscFeatureCreate),
+    ROW("_WSWindowBindRemoteCAClientContext",     gBindContext,       WXFMiscFeatureCreate),
+    ROW("_WSSystemWindowRelease",                 gReleaseWindow,     WXFMiscFeatureCreate),
 };
 
 static uint32_t gMissing;       // features with a symbol that wasn't found, set by Resolve
@@ -119,6 +134,9 @@ static void Resolve(void) {
     gRealTime = (RealTimeFn)dlsym(RTLD_DEFAULT, "SLSCurrentRealTime");
     if (!gRealTime) gRealTime = (RealTimeFn)WXFResolveServerSymbol("_SLSCurrentRealTime");
     if (!gRealTime) gMissing |= WXFMiscFeatureCore;
+    // CoreGraphics' region for a rectangle, which new_window takes.
+    gRegionWithRect = (RegionWithRectFn)dlsym(RTLD_DEFAULT, "CGRegionCreateWithRect");
+    if (!gRegionWithRect) gMissing |= WXFMiscFeatureCreate;
     // Where the session lives; the control block is reached through it.
     gSessionControlRef = (void *const *)WXFResolveServerData("___sessionControlRef");
     if (!gSessionControlRef) gMissing |= WXFMiscFeatureWindowList | WXFMiscFeatureReorder;
@@ -394,6 +412,11 @@ void WXFWindowUpdate(CGXWindow *window) {
     if (window && gUpdateWindow) gUpdateWindow(window->connection, window);
 }
 
+void WXFWindowUpdateAs(CGXWindow *window, CGXConnection *connection) {
+    NEED();
+    if (window && gUpdateWindow) gUpdateWindow(connection, window);
+}
+
 void WXFWindowSetAlpha(CGXWindow *window, float alpha) {
     NEED();
     if (!window || !gUpdateAlphas) return;
@@ -551,6 +574,31 @@ void WXFLogVisibleOrderMode(void) {
         if (n < 8) il += snprintf(ids + il, sizeof ids - il, "%lx ", (unsigned long)node[0]);
     os_log(Log(), "WXF misc: visible list mode %s (flags byte24 %02x dword20 %u), override list %ld: %s",
            wm ? "wmonly" : "merging", flags ? *(uint8_t *)(flags + 24) : 0, flags ? *(uint32_t *)(flags + 20) : 0, n, ids);
+}
+
+// --- Making windows -------------------------------------------------------------------------
+// A type 5 (CAContext-backed) window with no connection and flags 6145, as the shield windows are
+// made. The framework's Bind hook skips windows without a connection.
+enum { kWindowTypeCA = 5, kWindowFlags = 6145 };
+
+CGXWindow *WXFWindowCreate(CGRect frame) {
+    NEED(NULL);
+    if (!gNewWindow || !gRegionWithRect || CGRectIsEmpty(frame)) return NULL;
+    const void *region = gRegionWithRect(frame);
+    if (!region) return NULL;
+    CGXWindow *window = gNewWindow(NULL, kWindowTypeCA, region, kWindowFlags);
+    CFRelease(region);
+    return window;
+}
+
+void WXFWindowBindCAContext(CGXWindow *window, uint32_t contextID) {
+    NEED();
+    if (window && gBindContext) gBindContext(window, contextID);
+}
+
+void WXFWindowRelease(CGXWindow *window) {
+    NEED();
+    if (window && gReleaseWindow) gReleaseWindow(window);
 }
 
 // --- Applications ---------------------------------------------------------------------------
