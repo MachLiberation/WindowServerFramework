@@ -239,11 +239,12 @@ static void DriverStart(void) {
     WXFScheduleCallback(DriverTick, &gDriver, gDriver.beginTime);
 }
 
+
 static void DriverUpdate(double now) {
     if (!gDriver.live || !gDriver.animation)
         return;
     CGXWindow *window = WXFWindowFromID(gDriver.dragWindowID);
-    if (!window) {              // window went away
+    if (!window) {
         DriverStop();
         return;
     }
@@ -266,8 +267,6 @@ static void DriverUpdate(double now) {
 
     CGRect frame = WXFWindowGetFrame(window);
     CloneFollow(window);
-    // Drag events arrive faster than the timer, so smooth the velocity and ignore samples too
-    // close together to differentiate.
     if (!gDriver.haveLast) {
         gDriver.lastOrigin = frame.origin;
         gDriver.lastTime = now;
@@ -295,27 +294,36 @@ static void DriverUpdate(double now) {
     if (f.cursorValid)
         f.cursor = cursor;
 
-    // Shader params first: slot 0 is the framework's (progress), slots 1-4 are the developer's.
     if (gDriver.shaderActive) {
         WXFDragShaderParamFunction pfn = NULL;
         void *pinfo = NULL;
-        float params[kWXFFilterParamCount] = { progress, 0, 0, 0, 0 };
+
+        // The mesh lives in the shader data buffer, not in params. Only the
+        // first four floats of `data` are mirrored into params[] so the
+        // framework sees a change and re-uploads the whole buffer.
         float data[kWXFDragShaderDataCount] = {0};
+        float params[kWXFFilterParamCount] = { progress, 0, 0, 0, 0 };
+
         bool moving = false;
         if (WXFDragAnimationGetShader(anim, NULL, NULL, NULL, &pfn, &pinfo) && pfn)
             moving = pfn(&f, data, pinfo);
-        memcpy(&params[1], data, 4 * sizeof(float));   // also marks the filter changed
-        // Past the release animation the overlay lives on while the developer's effect is moving.
+
+        // Mirror the full mesh into params too, in case the framework reads
+        // extra params from there rather than from `data`. Copy in 4-float
+        // strides up to the framework's param slot count, and always copy the
+        // whole mesh via WXFDragShaderUpdate below.
+        memcpy(&params[1], data, 4 * sizeof(float));
+
         if (releaseDone && (!moving || now - gDriver.releaseTime > 10.0)) {
             DriverStop();
             return;
         }
+        // Upload the entire 512-float mesh, not just the 4-float params mirror.
         WXFDragShaderUpdate(gDriver.clone, params, data);
     } else if (releaseDone) {
         DriverStop();
         return;
     }
-
 }
 
 static void DriverTick(void *ctx, double now) {

@@ -269,7 +269,7 @@ void WXFShaderHook_set_pipeline(void *context, void *pipeline) {
         memcpy(extra.params, (char *)layer + kLayerFilterParamsOffset, sizeof extra.params);
         extra.bound = 1.0f;
         extra.phase = extra.params[0];   // params[0] is the drag's progress, set by the driver
-        memcpy(extra.data, gData, sizeof extra.data);
+        memcpy(extra.data, gData, kWXFDragShaderDataCount * sizeof(float));
     }
     void *encoder = render_encoder(context);
     if (encoder && ObjCReady())

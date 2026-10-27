@@ -50,7 +50,7 @@ struct WXFDragArgs {
 
 /// Bound at buffer(WXF_EXTRA_INDEX) by the framework. Must match the framework's layout.
 #define WXF_EXTRA_INDEX 8
-#define WXF_DATA_COUNT 40
+#define WXF_DATA_COUNT 512
 struct WXFDragExtra {
     /// params[0] is the drag's eased progress (framework-owned). Read it, and your own floats
     /// (`data`), with the helpers below.

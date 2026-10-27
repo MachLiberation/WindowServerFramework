@@ -8,7 +8,7 @@
 
 /// Number of floats the compositor carries on a window's filter each frame.
 #define kWXFFilterParamCount 5
-#define kWXFDragShaderDataCount 40   /* == WXF_DRAG_SHADER_DATA_COUNT in the public header */
+#define kWXFDragShaderDataCount 512   /* == WXF_DRAG_SHADER_DATA_COUNT in the public header */
 
 /// Makes `fragment` (from the precompiled `metallib` bytes) the shader the compositor draws
 /// tagged windows with, installing the compositor hooks on first use. Returns false if the

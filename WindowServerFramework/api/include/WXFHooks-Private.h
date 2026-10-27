@@ -23,6 +23,8 @@ typedef enum {
     WXFHookGroupEventKeys,
     /// Mouse move, drag and scroll events (WXFEvent.m). Installed on first use.
     WXFHookGroupEventPointer,
+    /// The menu bar's rectangle (WXFMenuBar.m). Installed on first use.
+    WXFHookGroupMenuBar,
     WXFHookGroupCount
 } WXFHookGroup;
 

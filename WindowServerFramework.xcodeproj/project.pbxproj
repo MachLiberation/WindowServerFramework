@@ -12,7 +12,9 @@
 		9DF66F12308FE7F00028DE21 /* Tweak.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF66F0E308FE7E90028DE21 /* Tweak.m */; };
 		9DF67018309014660028DE21 /* WindowServerFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */; };
 		9DF6701D309100010028DE21 /* Tweak.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF6701B309100010028DE21 /* Tweak.m */; };
+		9DF6711D309100010028DE21 /* Tweak.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF6711B309100010028DE21 /* Tweak.m */; };
 		9DF6701E309100010028DE21 /* WindowServerFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */; };
+		9DF6711E309100010028DE21 /* WindowServerFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,7 +27,9 @@
 		9DF66F0E308FE7E90028DE21 /* Tweak.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tweak.m; sourceTree = "<group>"; };
 		9DF66F10308FE7F00028DE21 /* DragShaderExample.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = DragShaderExample.metal; sourceTree = "<group>"; };
 		9DF6701A309100010028DE21 /* libExposeExample.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libExposeExample.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		9DF6711A309100010028DE21 /* libMenuBarExample.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libMenuBarExample.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DF6701B309100010028DE21 /* Tweak.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tweak.m; sourceTree = "<group>"; };
+		9DF6711B309100010028DE21 /* Tweak.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tweak.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -38,6 +42,7 @@
 				api/include/WXFDragAnimation.h,
 				api/include/WXFEvent.h,
 				api/include/WXFExpose.h,
+				api/include/WXFMenuBar.h,
 				api/include/WXFMisc.h,
 				WindowServerFramework.h,
 			);
@@ -72,6 +77,13 @@
 			isa = PBXFrameworksBuildPhase;
 			files = (
 				9DF6701E309100010028DE21 /* WindowServerFramework.framework in Frameworks */,
+				9DF6711E309100010028DE21 /* WindowServerFramework.framework in Frameworks */,
+			);
+		};
+		9DF67121309100010028DE21 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+				9DF6711E309100010028DE21 /* WindowServerFramework.framework in Frameworks */,
 			);
 		};
 /* End PBXFrameworksBuildPhase section */
@@ -95,6 +107,7 @@
 				18432ACB308FBCA3000F9648 /* WindowServerFramework */,
 				9DF66F0D308FE7DB0028DE21 /* DragShaderExample */,
 				9DF6701C309100010028DE21 /* ExposeExample */,
+				9DF6711C309100010028DE21 /* MenuBarExample */,
 				9DF67017309014660028DE21 /* Frameworks */,
 				18432ACA308FBCA3000F9648 /* Products */,
 			);
@@ -106,6 +119,7 @@
 				18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */,
 				9DF66F09308FE7D40028DE21 /* libDragShaderExample.dylib */,
 				9DF6701A309100010028DE21 /* libExposeExample.dylib */,
+				9DF6711A309100010028DE21 /* libMenuBarExample.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -134,6 +148,14 @@
 			path = ExposeExample;
 			sourceTree = "<group>";
 		};
+		9DF6711C309100010028DE21 /* MenuBarExample */ = {
+			isa = PBXGroup;
+			children = (
+				9DF6711B309100010028DE21 /* Tweak.m */,
+			);
+			path = MenuBarExample;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -148,6 +170,11 @@
 			);
 		};
 		9DF6701F309100010028DE21 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			files = (
+			);
+		};
+		9DF6711F309100010028DE21 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			files = (
 			);
@@ -195,14 +222,32 @@
 			buildConfigurationList = 9DF67023309100010028DE21 /* Build configuration list for PBXNativeTarget "ExposeExample" */;
 			buildPhases = (
 				9DF6701F309100010028DE21 /* Headers */,
+				9DF6711F309100010028DE21 /* Headers */,
 				9DF67020309100010028DE21 /* Sources */,
+				9DF67120309100010028DE21 /* Sources */,
 				9DF67021309100010028DE21 /* Frameworks */,
+				9DF67121309100010028DE21 /* Frameworks */,
 			);
 			buildRules = (
 			);
 			name = ExposeExample;
 			productName = ExposeExample;
 			productReference = 9DF6701A309100010028DE21 /* libExposeExample.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		9DF67122309100010028DE21 /* MenuBarExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9DF67123309100010028DE21 /* Build configuration list for PBXNativeTarget "MenuBarExample" */;
+			buildPhases = (
+				9DF6711F309100010028DE21 /* Headers */,
+				9DF67120309100010028DE21 /* Sources */,
+				9DF67121309100010028DE21 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			name = MenuBarExample;
+			productName = MenuBarExample;
+			productReference = 9DF6711A309100010028DE21 /* libMenuBarExample.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
 /* End PBXNativeTarget section */
@@ -221,6 +266,9 @@
 						CreatedOnToolsVersion = 27.1;
 					};
 					9DF67022309100010028DE21 = {
+						CreatedOnToolsVersion = 27.1;
+					};
+					9DF67122309100010028DE21 = {
 						CreatedOnToolsVersion = 27.1;
 					};
 				};
@@ -242,6 +290,7 @@
 				18432AC8308FBCA3000F9648 /* WindowServerFramework */,
 				9DF66F08308FE7D40028DE21 /* DragShaderExample */,
 				9DF67022309100010028DE21 /* ExposeExample */,
+				9DF67122309100010028DE21 /* MenuBarExample */,
 			);
 		};
 /* End PBXProject section */
@@ -293,6 +342,13 @@
 			isa = PBXSourcesBuildPhase;
 			files = (
 				9DF6701D309100010028DE21 /* Tweak.m in Sources */,
+				9DF6711D309100010028DE21 /* Tweak.m in Sources */,
+			);
+		};
+		9DF67120309100010028DE21 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+				9DF6711D309100010028DE21 /* Tweak.m in Sources */,
 			);
 		};
 /* End PBXSourcesBuildPhase section */
@@ -546,7 +602,35 @@
 			};
 			name = Debug;
 		};
+		9DF67124309100010028DE21 /* Debug configuration for PBXNativeTarget "MenuBarExample" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				MACH_O_TYPE = mh_dylib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
 		9DF67025309100010028DE21 /* Release configuration for PBXNativeTarget "ExposeExample" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				MACH_O_TYPE = mh_dylib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		9DF67125309100010028DE21 /* Release configuration for PBXNativeTarget "MenuBarExample" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
@@ -591,7 +675,17 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9DF67024309100010028DE21 /* Debug configuration for PBXNativeTarget "ExposeExample" */,
+				9DF67124309100010028DE21 /* Debug configuration for PBXNativeTarget "MenuBarExample" */,
 				9DF67025309100010028DE21 /* Release configuration for PBXNativeTarget "ExposeExample" */,
+				9DF67125309100010028DE21 /* Release configuration for PBXNativeTarget "MenuBarExample" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		9DF67123309100010028DE21 /* Build configuration list for PBXNativeTarget "MenuBarExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9DF67124309100010028DE21 /* Debug configuration for PBXNativeTarget "MenuBarExample" */,
+				9DF67125309100010028DE21 /* Release configuration for PBXNativeTarget "MenuBarExample" */,
 			);
 			defaultConfigurationName = Release;
 		};

@@ -303,6 +303,21 @@ tweaks only when it starts, so restart it (`sudo killall WindowServer`, which lo
 `scripts/deploy.sh --logs` streams the `WXF` log lines. The layout maths (forward/inverse
 matrices, perspective, hit testing) is checked outside WindowServer.
 
+## Menu bar
+
+```c
+#include <WindowServerFramework/WXFMenuBar.h>
+
+WXFMenuBarSetThickness(36.0);   // points; 0 keeps the system's height
+```
+
+One hook on the function that returns the bar's rectangle sets the bar window, the part of the
+screen windows can't be dragged into, the status items and the rectangle clients are told about
+together. The setting is global; the later call wins. A call rebuilds the bar, so a change shows at
+once. `MenuBarExample` makes the bar 36 points tall and binds Control + Option + Command + `[` / `]`
+(thickness) and `\` (system height). Moving the bar to another edge is not offered; what that needs is
+written up in [menubar-internals.md](menubar-internals.md).
+
 ## Misc
 
 Declared in `WXFMisc.h`. The mid-level pieces the features are built from, for tweaks that need

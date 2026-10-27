@@ -45,6 +45,9 @@ HOOK_DECL(WXFShader, uber_composite)
 HOOK_DECL(WXFEvent, CheckForHotKey)
 HOOK_DECL(WXFEvent, Annotated)
 
+// Menu bar placement (WXFMenuBar.m)
+HOOK_DECL(WXFMenuBar, Bounds)
+
 // --- Table ----------------------------------------------------------------------------------
 typedef struct {
     WXFHookGroup group;
@@ -88,6 +91,11 @@ static const WXFHookEntry kHooks[] = {
     // sAnnotatedContinuation(SLSEventRecord *, void *): mouse moved / dragged and scrolling.
     HOOK(WXFHookGroupEventPointer, WXFEvent, Annotated,
          "__ZL22sAnnotatedContinuationP14SLSEventRecordPv")
+
+    // -- Menu bar. menu_bar_bounds_for_space(PKGManagedMenuSpace *) -> CGRect: the bar's rect for
+    // the window, the drag region, the status items and what clients are told.
+    HOOK(WXFHookGroupMenuBar, WXFMenuBar, Bounds,
+         "__ZL25menu_bar_bounds_for_spaceP19PKGManagedMenuSpace")
 };
 
 // --- Installation ---------------------------------------------------------------------------

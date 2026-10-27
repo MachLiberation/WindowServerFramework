@@ -48,7 +48,7 @@ typedef struct {
 } WXFDragFrame;
 
 /// How many floats a shader receives from its WXFDragShaderParamFunction each frame.
-#define WXF_DRAG_SHADER_DATA_COUNT 40
+#define WXF_DRAG_SHADER_DATA_COUNT 512
 
 /// Fills the floats (WXF_DRAG_SHADER_DATA_COUNT of them, zeroed first) a shader receives each frame (see WXFDragAnimationSetShader). Called on
 /// WindowServer's main thread about every 1/60s while the animation is live; keep it fast.

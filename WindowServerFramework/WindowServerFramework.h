@@ -14,6 +14,7 @@ FOUNDATION_EXPORT const unsigned char WindowServerFrameworkVersionString[];
 #import <WindowServerFramework/WXFBase.h>
 #import <WindowServerFramework/WXFEvent.h>
 #import <WindowServerFramework/WXFExpose.h>
+#import <WindowServerFramework/WXFMenuBar.h>
 #import <WindowServerFramework/WXFMisc.h>
 
 // The framework is a single dylib shared by every tweak that uses it (dyld loads it once, from
