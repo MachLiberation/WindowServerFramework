@@ -11,15 +11,21 @@
 		1819FF7E308FC14500F9C014 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 1819FF7C308FC14500F9C014 /* README.md */; };
 		9DF66F12308FE7F00028DE21 /* Tweak.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF66F0E308FE7E90028DE21 /* Tweak.m */; };
 		9DF67018309014660028DE21 /* WindowServerFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */; };
+		9DF6701D309100010028DE21 /* Tweak.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF6701B309100010028DE21 /* Tweak.m */; };
+		9DF6701E309100010028DE21 /* WindowServerFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		1819FF7A308FC14500F9C014 /* api.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = api.md; sourceTree = "<group>"; };
 		1819FF7C308FC14500F9C014 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = WindowServerFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9D593740309062FC002AE404 /* drag-internals.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "drag-internals.md"; sourceTree = "<group>"; };
+		9D593741309062FC002AE404 /* expose-internals.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "expose-internals.md"; sourceTree = "<group>"; };
 		9DF66F09308FE7D40028DE21 /* libDragShaderExample.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libDragShaderExample.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DF66F0E308FE7E90028DE21 /* Tweak.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tweak.m; sourceTree = "<group>"; };
 		9DF66F10308FE7F00028DE21 /* DragShaderExample.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = DragShaderExample.metal; sourceTree = "<group>"; };
+		9DF6701A309100010028DE21 /* libExposeExample.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libExposeExample.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		9DF6701B309100010028DE21 /* Tweak.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tweak.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -30,6 +36,8 @@
 				api/include/WXFBase.h,
 				api/include/WXFDrag.h,
 				api/include/WXFDragAnimation.h,
+				api/include/WXFEvent.h,
+				api/include/WXFExpose.h,
 				WindowServerFramework.h,
 			);
 			target = 18432AC8308FBCA3000F9648 /* WindowServerFramework */;
@@ -59,6 +67,12 @@
 				9DF67018309014660028DE21 /* WindowServerFramework.framework in Frameworks */,
 			);
 		};
+		9DF67021309100010028DE21 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+				9DF6701E309100010028DE21 /* WindowServerFramework.framework in Frameworks */,
+			);
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -66,6 +80,8 @@
 			isa = PBXGroup;
 			children = (
 				1819FF7A308FC14500F9C014 /* api.md */,
+				9D593740309062FC002AE404 /* drag-internals.md */,
+				9D593741309062FC002AE404 /* expose-internals.md */,
 			);
 			path = docs;
 			sourceTree = "<group>";
@@ -77,6 +93,7 @@
 				1819FF7C308FC14500F9C014 /* README.md */,
 				18432ACB308FBCA3000F9648 /* WindowServerFramework */,
 				9DF66F0D308FE7DB0028DE21 /* DragShaderExample */,
+				9DF6701C309100010028DE21 /* ExposeExample */,
 				9DF67017309014660028DE21 /* Frameworks */,
 				18432ACA308FBCA3000F9648 /* Products */,
 			);
@@ -87,6 +104,7 @@
 			children = (
 				18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */,
 				9DF66F09308FE7D40028DE21 /* libDragShaderExample.dylib */,
+				9DF6701A309100010028DE21 /* libExposeExample.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -107,6 +125,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		9DF6701C309100010028DE21 /* ExposeExample */ = {
+			isa = PBXGroup;
+			children = (
+				9DF6701B309100010028DE21 /* Tweak.m */,
+			);
+			path = ExposeExample;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -116,6 +142,11 @@
 			);
 		};
 		9DF66F05308FE7D40028DE21 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			files = (
+			);
+		};
+		9DF6701F309100010028DE21 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			files = (
 			);
@@ -158,6 +189,21 @@
 			productReference = 9DF66F09308FE7D40028DE21 /* libDragShaderExample.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
+		9DF67022309100010028DE21 /* ExposeExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9DF67023309100010028DE21 /* Build configuration list for PBXNativeTarget "ExposeExample" */;
+			buildPhases = (
+				9DF6701F309100010028DE21 /* Headers */,
+				9DF67020309100010028DE21 /* Sources */,
+				9DF67021309100010028DE21 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			name = ExposeExample;
+			productName = ExposeExample;
+			productReference = 9DF6701A309100010028DE21 /* libExposeExample.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -171,6 +217,9 @@
 						CreatedOnToolsVersion = 27.1;
 					};
 					9DF66F08308FE7D40028DE21 = {
+						CreatedOnToolsVersion = 27.1;
+					};
+					9DF67022309100010028DE21 = {
 						CreatedOnToolsVersion = 27.1;
 					};
 				};
@@ -191,6 +240,7 @@
 			targets = (
 				18432AC8308FBCA3000F9648 /* WindowServerFramework */,
 				9DF66F08308FE7D40028DE21 /* DragShaderExample */,
+				9DF67022309100010028DE21 /* ExposeExample */,
 			);
 		};
 /* End PBXProject section */
@@ -236,6 +286,12 @@
 			isa = PBXSourcesBuildPhase;
 			files = (
 				9DF66F12308FE7F00028DE21 /* Tweak.m in Sources */,
+			);
+		};
+		9DF67020309100010028DE21 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+				9DF6701D309100010028DE21 /* Tweak.m in Sources */,
 			);
 		};
 /* End PBXSourcesBuildPhase section */
@@ -475,6 +531,34 @@
 			};
 			name = Release;
 		};
+		9DF67024309100010028DE21 /* Debug configuration for PBXNativeTarget "ExposeExample" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				MACH_O_TYPE = mh_dylib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		9DF67025309100010028DE21 /* Release configuration for PBXNativeTarget "ExposeExample" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				MACH_O_TYPE = mh_dylib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -499,6 +583,14 @@
 			buildConfigurations = (
 				9DF66F0B308FE7D40028DE21 /* Debug configuration for PBXNativeTarget "DragShaderExample" */,
 				9DF66F0C308FE7D40028DE21 /* Release configuration for PBXNativeTarget "DragShaderExample" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		9DF67023309100010028DE21 /* Build configuration list for PBXNativeTarget "ExposeExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9DF67024309100010028DE21 /* Debug configuration for PBXNativeTarget "ExposeExample" */,
+				9DF67025309100010028DE21 /* Release configuration for PBXNativeTarget "ExposeExample" */,
 			);
 			defaultConfigurationName = Release;
 		};

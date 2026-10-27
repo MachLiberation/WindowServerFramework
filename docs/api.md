@@ -195,6 +195,114 @@ Inside a callback:
 
 Tiled-space drags are not hooked yet.
 
+## Events
+
+`WXFEvent.h` lets a tweak see, and swallow, the input WindowServer is about to route. It is how
+you catch the shortcut that starts a custom view, and how the view keeps clicks and keys away from
+applications while it is up.
+
+```c
+static WXFEventDisposition OnEvent(WXFEventRef e, void *info) {
+    if (WXFEventGetType(e) == WXFEventTypeKeyDown && WXFEventGetKeyCode(e) == 126 /* up */ &&
+        (WXFEventGetFlags(e) & WXFEventFlagMask) == WXFEventFlagControl)
+        return WXFEventDispositionConsume;      // nothing downstream sees it, the Dock included
+    return WXFEventDispositionPass;
+}
+WXFEventAddHandler(WXFEventTypeKeyDown | WXFEventTypeKeyUp, OnEvent, NULL);
+```
+
+Handlers run on WindowServer's event thread, newest first; the first to return
+`WXFEventDispositionConsume` ends the chain and the event goes no further. Keep them quick. The
+event reference is only valid inside the callback. `WXFEventRemoveHandler(id)` removes one.
+
+| Type | Events |
+| --- | --- |
+| `WXFEventTypeKeyDown` / `KeyUp` / `FlagsChanged` | Keys and modifier changes. |
+| `WXFEventTypeMouseDown` / `MouseUp` | Any button. A consumed mouse-down never focuses or raises. |
+| `WXFEventTypeMouseMoved` / `MouseDragged` | Pointer motion. |
+| `WXFEventTypeScrollWheel` | Scrolling. |
+| `WXFEventTypeGesture` | Trackpad gestures, as far as they pass through the event stages. |
+| `WXFEventTypeSymbolicHotKey` | System shortcuts (Mission Control, Spaces, ...) before they are acted on. |
+| `WXFEventTypeDockSwipe` | The trackpad's system swipes (Mission Control, App Exposé, Spaces) on their way to the Dock. Consume every event of a swipe to keep the Dock from acting on it. |
+
+Accessors: `WXFEventGetType`, `GetLocation`, `GetFlags`, `GetKeyCode`, `GetButton`,
+`GetScrollDelta` (lines, fractional for trackpads), `GetPhase` (gestures and swipes),
+`GetDockSwipe` (motion and signed progress), `GetSymbolicHotKey`, `GetRawType`. Consuming the key-down of a shortcut gives the
+matching key-up no owner, so swallow that too (the example tweak does).
+
+The hooks install the first time a handler is added, in two groups, so a missing symbol on a
+future OS only loses the events it carries. How the stages work, and what is verified, is in
+[Expose internals](expose-internals.md).
+
+## Custom Exposé
+
+`WXFExpose.h` shows a view of the user's windows that **your tweak lays out**. The Dock is not
+involved: you catch the shortcut (see Events), call `WXFExposeBegin`, and the framework moves the
+real windows with the same per-window 3D transforms the Dock uses, so any arrangement works: a
+grid, a cover flow, a carousel, a stack.
+
+```c
+WXFExposeCallbacks cb = { .layout = Layout, .handleEvent = HandleEvent };
+WXFExposeProviderRef provider = WXFExposeProviderCreate(&cb);
+WXFExposeSessionRef session = WXFExposeBegin(provider, WXFExposeScopeAllWindows);
+```
+
+A provider is a set of optional callbacks, shaped like `CFRunLoopSourceContext` (`info`, `retain`,
+`release`). Everything is called on WindowServer's threads, so keep it quick.
+
+| Callback | Purpose |
+| --- | --- |
+| `includeWindow` | Which windows take part. Default: ordinary windows (level 0). |
+| `didBegin` | The view is up; items hold their natural layout. |
+| `layout` | Every frame while animating, and after `WXFExposeSessionSetNeedsLayout`. Set each item's layout. Return `true` to be called again next frame, `false` when at rest. |
+| `handleEvent` | Input while the view is up. Return `true` if you used it. |
+| `willEnd` / `didEnd` | The view is going away / the windows are back. |
+
+**Layout.** `WXFExposeItemLayout` says where a window's middle appears (`center`), how big
+(`scale`), how it is turned (`rotationX/Y/Z`, radians), how far it is toward the viewer
+(`translationZ`), and the camera (`perspective` distance in points, 0 for none, and the
+vanishing point `eye`), plus `alpha`. All are relative to the window's natural place. The
+framework builds the matrix, inverts it into the form WindowServer stores, and rejects nothing:
+a scale of 0 is clamped. `WXFExposeItemGetQuad` gives the on-screen corners, and
+`WXFExposeSessionHitTest` the frontmost window at a point.
+
+**The windows behind.** Every window that doesn't take part (other applications' windows in the
+front-application scope, anything `includeWindow` refused, the desktop picture and icons, the menu
+bar, the Dock) is a `WXFExposeBackgroundRef`. `WXFExposeBackgroundSetAlpha(background, alpha)` fades
+or hides it, from the same callbacks as the layouts, and the framework puts the alphas back when the
+view ends. The framework applies no policy of its own. The example fades out the left-out ordinary
+windows (so the front-application scope shows only that application) and leaves the desktop, menu
+bar and Dock.
+
+**Stacking.** WindowServer draws windows in stacking order, not by their transformed z. While the
+view is up the framework therefore stacks them by `translationZ`, nearest the viewer in front, with
+ties in their real order. The real order is put back when the view ends.
+
+**Input.** The framework registers one event handler while a view is up. It runs yours first, then
+does the defaults: Escape or a click outside every window cancels, a click on a window selects it,
+other events are swallowed (modifier changes excepted). Control+option+command+escape always
+cancels, as an escape hatch for a buggy provider. `WXFExposeEnd(session, reason, selected)` ends
+the view yourself; once the windows are back the selected window's application is made the front
+application and the window is ordered to the front.
+
+**Lifetime.** One view at a time; a second `Begin` returns `NULL`. Item and window references are
+valid until `didEnd` returns. If the tweak is unloaded or WindowServer exits there is nothing to
+restore, since the transforms live in WindowServer.
+
+**Example.** `ExposeExample` is a cover flow. ⌃↑ or a trackpad swipe up shows all windows, and ⌃↓
+or a swipe down only the front application's. The fly-in follows the fingers, and a vertical swipe
+while the view is up closes it. Arrows, scrolling and clicks move through the row, Return or a
+click on the middle card selects it, and Escape cancels.
+
+**Limitations.** There is no backdrop, no labels, no Spaces strip, and minimized windows are not
+shown. The Dock's shortcuts and swipes still reach the Dock unless you
+consume them as events.
+
+**Testing.** `scripts/deploy.sh ExposeExample` builds and installs the tweak; WindowServer loads
+tweaks only when it starts, so restart it (`sudo killall WindowServer`, which logs you out).
+`scripts/deploy.sh --logs` streams the `WXF` log lines. The layout maths (forward/inverse
+matrices, perspective, hit testing) is checked outside WindowServer.
+
 ## Base
 
 Declared in `WXFBase.h`.

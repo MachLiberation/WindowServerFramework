@@ -38,7 +38,7 @@ typedef struct CGXWindow {
     uint8_t        _pad_024[0xc];
     CGXConnection *connection;                          // 0x030
     uint8_t        _pad_038[0x18];
-    uint32_t       connection_id;                       // 0x050  cid for CGXGetConnectionAppName
+    uint32_t       connection_id;                       // 0x050  NOT the connection id (reads 0); the id is *(conn + 0x50), conn = *(w+0x40) ?: w->connection
     uint8_t        _pad_054[0x70];
     uint32_t       screen_geometry_seed;                // 0x0c4
     uint8_t        _pad_0c8[0x20];

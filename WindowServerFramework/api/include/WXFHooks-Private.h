@@ -19,6 +19,10 @@ typedef enum {
     WXFHookGroupDrag,
     /// The compositor hooks behind drag shaders (WXFDragShader.m). Installed on first use.
     WXFHookGroupDragShader,
+    /// Key, button and gesture events (WXFEvent.m). Installed on first use.
+    WXFHookGroupEventKeys,
+    /// Mouse move, drag and scroll events (WXFEvent.m). Installed on first use.
+    WXFHookGroupEventPointer,
     WXFHookGroupCount
 } WXFHookGroup;
 

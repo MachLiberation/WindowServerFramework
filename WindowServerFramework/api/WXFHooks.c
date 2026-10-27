@@ -41,6 +41,10 @@ HOOK_DECL(WXFShader, set_pipeline)
 HOOK_DECL(WXFShader, composite_layer)
 HOOK_DECL(WXFShader, uber_composite)
 
+// Input events (WXFEvent.m)
+HOOK_DECL(WXFEvent, CheckForHotKey)
+HOOK_DECL(WXFEvent, Annotated)
+
 // --- Table ----------------------------------------------------------------------------------
 typedef struct {
     WXFHookGroup group;
@@ -77,6 +81,13 @@ static const WXFHookEntry kHooks[] = {
     HOOK(WXFHookGroupDragShader, WXFShader, composite_layer, "_MetalCompositeLayer")
     HOOK(WXFHookGroupDragShader, WXFShader, uber_composite,
          "__ZN14ShaderComposer13UberCompositeE14MTLPixelFormaty")
+
+    // -- Input events. Two stages, so a missing symbol on a future OS only loses the events it carries.
+    // CGXCheckForHotKey(SLSEventRecord *): buttons, keys, gestures; returns 0 to consume.
+    HOOK(WXFHookGroupEventKeys, WXFEvent, CheckForHotKey, "_CGXCheckForHotKey")
+    // sAnnotatedContinuation(SLSEventRecord *, void *): mouse moved / dragged and scrolling.
+    HOOK(WXFHookGroupEventPointer, WXFEvent, Annotated,
+         "__ZL22sAnnotatedContinuationP14SLSEventRecordPv")
 };
 
 // --- Installation ---------------------------------------------------------------------------
