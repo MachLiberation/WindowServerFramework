@@ -28,6 +28,9 @@ typedef enum {
     /// Which CAContext each app window hosts (WXFCAContextRetriever.m). Installed as soon as
     /// SetupFramework has run, so the map is complete for windows made afterwards.
     WXFHookGroupCAContext,
+    /// The shape a window is composited within, widened by its decor (WXFDecor.m). Installed with
+    /// the first decor.
+    WXFHookGroupDecor,
     WXFHookGroupCount
 } WXFHookGroup;
 
