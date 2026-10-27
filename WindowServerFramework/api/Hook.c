@@ -8,10 +8,12 @@
 #include <CoreFoundation/CoreFoundation.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <dlfcn.h>
 #include <mach-o/loader.h>
 #include <mach-o/nlist.h>
 #include <mach-o/dyld.h>
+#include "WXFHooks-Private.h"
 
 typedef bool (*GumInterceptorReplaceIMP)(void *, void *, void *, void *, void **);
 typedef void (*GumInterceptorTransactionIMP)(void *);
@@ -65,9 +67,32 @@ static void *FindServerSymbol(const char *wanted) {
 
 void *gInterceptor = NULL;
 
+// Looks up a WindowServer (SkyLight) symbol by its raw Mach-O name, e.g. "_CGXGetCurrentCursorLocation".
+// Returns a callable function pointer, or NULL if it isn't present on this OS build.
+bool WXFIsFrameworkSetUp(void) {
+    return gInterceptor != NULL;
+}
+
+void *WXFResolveServerSymbol(const char *Wanted) {
+    return FindServerSymbol(Wanted);
+}
+
+
+extern int sandbox_init_with_parameters(const char *profile, uint64_t flags, const char **params, char **errorbuf);
+int sandbox_init_with_parameters_new(const char *profile, uint64_t flags, const char **params, char **errorbuf) {
+            return 0;
+}
+
+
 __attribute__((visibility("default")))
 void SetupFramework(void * ammonia_gum_interceptor) {
-    gInterceptor = ammonia_gum_interceptor;
+    // Every tweak calls this with Ammonia's interceptor; the framework is one shared dylib, so the
+    // first call wins and later calls just make sure the startup hooks are in.
+    if (gInterceptor == NULL)
+        gInterceptor = ammonia_gum_interceptor;
+    WXFHooksInstallAll();
+    
+    
 }
 
 // resolver compares raw Mach-O names, so make sure Wanted uses the exact spelling stored in the table.

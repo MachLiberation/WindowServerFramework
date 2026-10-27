@@ -16,7 +16,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "9DF66F08308FE7D40028DE21"
-               BuildableName = "libExampleTweak.dylib"
+               BuildableName = "libDragShaderExample.dylib"
                ReferencedContainer = "container:WindowServerFramework.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -51,7 +51,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "9DF66F08308FE7D40028DE21"
-            BuildableName = "libExampleTweak.dylib"
+            BuildableName = "libDragShaderExample.dylib"
             ReferencedContainer = "container:WindowServerFramework.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
