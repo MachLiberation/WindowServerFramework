@@ -1,6 +1,7 @@
 //Created by bedtime on 10/26/26.
 
 #include <WindowServerFramework/WXFDrag.h>
+#include <WindowServerFramework/WXFMisc.h>
 #include "WXFBase-Private.h"
 #include "WXFDragShader-Private.h"
 #include "WXFHooks-Private.h"
@@ -25,7 +26,6 @@ static struct {
 static WXFDragObserverID gNextObserverID = 1;
 static pthread_mutex_t gObserverLock = PTHREAD_MUTEX_INITIALIZER;
 
-#include <dlfcn.h>
 #include <os/log.h>
 #include <math.h>
 #include <string.h>
@@ -33,42 +33,16 @@ static pthread_mutex_t gObserverLock = PTHREAD_MUTEX_INITIALIZER;
 // WindowServer runs one window drag at a time per session, so one driver is sufficient. Everything
 // below runs on WindowServer's main thread (hooks and scheduled callbacks), except observer
 // registration which is guarded by gObserverLock.
-typedef CGXWindow *(*WindowByIDFn)(uint32_t);
-typedef CGRect (*ClippedFrameBoundsFn)(CGXWindow *);
-typedef int   (*GetCursorFn)(double *);
-typedef void  (*ScheduleFn)(void (*)(void *, double), void *, double);
-typedef double (*RealTimeFn)(void);
-
+// Symbols only the clone needs; the rest of what the driver does with windows is in WXFMisc.h.
 typedef CGXWindow *(*CreateCloneFn)(CGXWindow *, CGRect, const void *, bool);
-typedef const void *(*WindowGetDisplayFn)(CGXWindow *);
-typedef void (*OrderWindowListFn)(CGXConnection *, const uint32_t *, const int32_t *, const uint32_t *, unsigned, bool);
 typedef void (*SystemWindowReleaseFn)(CGXWindow *);
-typedef void (*MoveWindowListFn)(CGXConnection *, const uint32_t *, unsigned, uint64_t, float, float);
 
 static CreateCloneFn gCreateClone;
-static WindowGetDisplayFn gWindowGetDisplay;
-static OrderWindowListFn gOrderWindowList;
 static SystemWindowReleaseFn gSystemWindowRelease;
-static MoveWindowListFn gMoveWindowList;
-static ClippedFrameBoundsFn gClippedFrameBounds;
-static ClippedFrameBoundsFn gScreenRect;
 typedef void (*ClearShadowFn)(CGXWindow *);
 typedef int (*SetShadowParamsFn)(uint32_t, uint32_t, float, float, float, float);
 static ClearShadowFn gClearShadowDensity, gSetShadowEnable, gReleaseShadowResources;
 static SetShadowParamsFn gSetShadowParameters;
-
-enum { kOrderOut = 0, kOrderAbove = 1 };   // CGSWindowOrderingMode
-
-
-typedef uint64_t (*UpdateAlphasFn)(CGXWindow *, CGXConnection *, float, float, float, bool);
-typedef void (*UpdateWindowFn)(CGXConnection *, CGXWindow *);
-static UpdateAlphasFn gUpdateAlphas;
-static UpdateWindowFn gUpdateWindow;
-static WindowByIDFn gWindowByID;
-static ClippedFrameBoundsFn gFrameBounds;
-static GetCursorFn gGetCursor;
-static ScheduleFn gSchedule;
-static RealTimeFn gRealTime;
 
 #define kFrameInterval (1.0 / 60.0)
 
@@ -119,30 +93,15 @@ static bool ResolveDriverSymbols(void) {
     static bool tried, ok;
     if (tried) return ok;
     tried = true;
-    gWindowByID  = (WindowByIDFn)WXFResolveServerSymbol("__ZL12window_by_idj");
-    gFrameBounds = (ClippedFrameBoundsFn)WXFResolveServerSymbol("_WSCurrentUntransformedWindowBounds");
-    gSchedule    = (ScheduleFn)WXFResolveServerSymbol("_WSScheduleCallbackOnCurrentSession");
-    gGetCursor   = (GetCursorFn)WXFResolveServerSymbol("_CGXGetCurrentCursorLocation");
-    gRealTime    = (RealTimeFn)dlsym(RTLD_DEFAULT, "SLSCurrentRealTime");
-    if (!gRealTime)
-        gRealTime = (RealTimeFn)WXFResolveServerSymbol("_SLSCurrentRealTime");
     gCreateClone        = (CreateCloneFn)WXFResolveServerSymbol("__ZL19CreateCloneOfWindowP9CGXWindow6CGRectPK10PKGDisplayb");
-    gWindowGetDisplay   = (WindowGetDisplayFn)WXFResolveServerSymbol("_PKGWindowGetDisplay");
-    gOrderWindowList    = (OrderWindowListFn)WXFResolveServerSymbol(
-        "__ZL36CGXOrderWindowListSpaceSwitchOptionsP13CGXConnectionPKjPK10CGSOrderOpS2_jb");
     gSystemWindowRelease = (SystemWindowReleaseFn)WXFResolveServerSymbol("_WSSystemWindowRelease");
-    gMoveWindowList     = (MoveWindowListFn)WXFResolveServerSymbol("_CGXMoveWindowList");
-    gClippedFrameBounds = (ClippedFrameBoundsFn)WXFResolveServerSymbol("__ZN9CGXWindow20clipped_frame_boundsEv");
-    gScreenRect         = (ClippedFrameBoundsFn)WXFResolveServerSymbol("__ZNK9CGXWindow11screen_rectEv");
     // Optional: the overlay is not meant to have a shadow of its own.
     gClearShadowDensity    = (ClearShadowFn)WXFResolveServerSymbol("__ZL20clear_shadow_densityP9CGXWindow");
     gSetShadowEnable       = (ClearShadowFn)WXFResolveServerSymbol("_WSWindowSetShadowEnable");
     gReleaseShadowResources = (ClearShadowFn)WXFResolveServerSymbol("_WSWindowReleaseShadowResources");
     gSetShadowParameters   = (SetShadowParamsFn)WXFResolveServerSymbol("_SLSSetWindowShadowParameters");
-    gUpdateAlphas = (UpdateAlphasFn)WXFResolveServerSymbol("__ZN9CGXWindow13update_alphasEP13CGXConnectionfffb");
-    gUpdateWindow = (UpdateWindowFn)WXFResolveServerSymbol("_updateWindow");
-    ok = gUpdateAlphas && gWindowByID && gFrameBounds && gSchedule && gRealTime && gCreateClone && gWindowGetDisplay &&
-         gOrderWindowList && gScreenRect && gSystemWindowRelease && gMoveWindowList && gClippedFrameBounds;
+    ok = gCreateClone && gSystemWindowRelease &&
+         WXFMiscIsAvailable(WXFMiscFeatureCore | WXFMiscFeatureDisplays | WXFMiscFeatureMove | WXFMiscFeatureShape);
     if (!ok)
         os_log(OS_LOG_DEFAULT, "WXF drag: required WindowServer symbols missing, drag animations disabled");
     return ok;
@@ -152,26 +111,7 @@ static void DriverTick(void *ctx, double now);
 static void DriverUpdate(double now);
 
 // Hiding the dragged window while its snapshot stands in for it, the way the server fades a
-// window: through its alpha. A CoreAnimation-backed window's root layer (CAWindowContent+136, the
-// parent of its "Shadow", "Hosting", "Window" and client-content layers) has its opacity set on
-// every ingestion to the product of CGXWindow's three alpha factors (+488, +492, +496), clamped
-// to 0...1 (defenestrator3::ca_window_prep_ingestion_phase), so alpha 0 hides the window and its
-// shadow. CGXWindow::update_alphas stores the factors whether or not the window is set up for
-// server-side fades (CGXSetWindowListAlpha is gated on that, update_alphas is not), and its
-// commit flag bumps the window's change count; _updateWindow then dirties it so the change is
-// picked up even if the drag stops moving it.
-
-#define kWindowAlphaOffset 488   /* three floats: the factors update_alphas sets */
-
-static float WindowAlpha(CGXWindow *window, int i) {
-    return ((float *)((char *)window + kWindowAlphaOffset))[i];
-}
-
-static void SetWindowAlpha(CGXWindow *window, float alpha) {
-    gUpdateAlphas(window, window->connection, alpha, WindowAlpha(window, 1), WindowAlpha(window, 2), true);
-    if (gUpdateWindow)
-        gUpdateWindow(window->connection, window);
-}
+// window: through its alpha (see WXFWindowSetAlpha in WXFMisc.m for why that hides its shadow too).
 
 // Released a little after it is ordered out, as the server may still have a frame of it in flight.
 static void ReleaseCloneLater(void *ctx, double now) {
@@ -180,8 +120,8 @@ static void ReleaseCloneLater(void *ctx, double now) {
 }
 
 static CGXWindow *CloneCreate(CGXWindow *window) {
-    const void *display = gWindowGetDisplay(window);
-    CGRect windowFrame = gClippedFrameBounds(window);   // the window with its shadow
+    const void *display = WXFWindowGetDisplay(window);
+    CGRect windowFrame = WXFWindowGetClippedFrame(window);   // the window with its shadow
     if (!display || windowFrame.size.width < 1 || windowFrame.size.height < 1)
         return NULL;
     // The overlay is the window's frame plus the animation's margin. Whole points, so the
@@ -190,7 +130,7 @@ static CGXWindow *CloneCreate(CGXWindow *window) {
     margin = ceilf(margin);
     CGRect frame = CGRectMake(floor(windowFrame.origin.x) - margin, floor(windowFrame.origin.y) - margin,
                               ceil(windowFrame.size.width) + 2 * margin, ceil(windowFrame.size.height) + 2 * margin);
-    CGRect content = gScreenRect(window);
+    CGRect content = WXFWindowGetScreenRect(window);
     if (content.size.width < 1 || content.size.height < 1)
         content = windowFrame;
 
@@ -206,11 +146,11 @@ static CGXWindow *CloneCreate(CGXWindow *window) {
         gReleaseShadowResources(clone);
     if (gSetShadowParameters)
         gSetShadowParameters(0, wid, 0.0f, 0.0f, 0.0f, 0.0f);
-    int32_t op = kOrderAbove;
+    WXFOrderOp op = WXFOrderAbove;
     uint32_t relative = window->window_id;
-    gOrderWindowList(window->connection, &wid, &op, &relative, 1, false);
+    WXFOrderWindowList(window->connection, &wid, &op, &relative, 1);
 
-    CGRect base = gFrameBounds(window);
+    CGRect base = WXFWindowGetFrame(window);
     gDriver.clone = clone;
     gDriver.cloneWindowID = wid;
     gDriver.cloneOrigin = frame.origin;
@@ -218,8 +158,8 @@ static CGXWindow *CloneCreate(CGXWindow *window) {
     WXFDragShaderSetGeometry((float)frame.size.width, (float)frame.size.height, margin,
                              (float)(content.origin.x - frame.origin.x), (float)(content.origin.y - frame.origin.y),
                              (float)content.size.width, (float)content.size.height);
-    gDriver.savedAlpha = WindowAlpha(window, 0);
-    SetWindowAlpha(window, 0.0f);      // the snapshot stands in for the window from here
+    gDriver.savedAlpha = WXFWindowGetAlphaFactor(window, 0);
+    WXFWindowSetAlpha(window, 0.0f);      // the snapshot stands in for the window from here
     os_log(OS_LOG_DEFAULT, "WXF drag: overlay wid=%u for wid=%u frame=(%.0f,%.0f %.0fx%.0f) margin=%.0f",
            wid, window->window_id, frame.origin.x, frame.origin.y, frame.size.width, frame.size.height, margin);
     return clone;
@@ -229,12 +169,12 @@ static CGXWindow *CloneCreate(CGXWindow *window) {
 static void CloneFollow(CGXWindow *window) {
     if (!gDriver.clone)
         return;
-    CGRect base = gFrameBounds(window);
+    CGRect base = WXFWindowGetFrame(window);
     float dx = (float)(floor(base.origin.x + gDriver.cloneOffset.x) - gDriver.cloneOrigin.x);
     float dy = (float)(floor(base.origin.y + gDriver.cloneOffset.y) - gDriver.cloneOrigin.y);
     if (dx == 0 && dy == 0)
         return;
-    gMoveWindowList(gDriver.clone->connection, &gDriver.cloneWindowID, 1, 0, dx, dy);
+    WXFWindowMoveBy(gDriver.clone, dx, dy);
     gDriver.cloneOrigin.x += dx;
     gDriver.cloneOrigin.y += dy;
 }
@@ -244,13 +184,13 @@ static void CloneDestroy(void) {
     if (!clone)
         return;
     WXFDragShaderDetach(clone);
-    CGXWindow *original = gWindowByID(gDriver.dragWindowID);
+    CGXWindow *original = WXFWindowFromID(gDriver.dragWindowID);
     if (original)
-        SetWindowAlpha(original, gDriver.savedAlpha);
-    int32_t op = kOrderOut;
+        WXFWindowSetAlpha(original, gDriver.savedAlpha);
+    WXFOrderOp op = WXFOrderOut;
     uint32_t relative = 0;
-    gOrderWindowList(NULL, &gDriver.cloneWindowID, &op, &relative, 1, false);
-    gSchedule(ReleaseCloneLater, clone, gRealTime() + 0.1);
+    WXFOrderWindowList(NULL, &gDriver.cloneWindowID, &op, &relative, 1);
+    WXFScheduleCallback(ReleaseCloneLater, clone, WXFCurrentTime() + 0.1);
     gDriver.clone = NULL;
     gDriver.cloneWindowID = 0;
 }
@@ -279,7 +219,7 @@ static void DriverStart(void) {
     const char *fragment;
     if (!WXFDragAnimationGetShader(anim, &lib, &libLength, &fragment, NULL, NULL))
         return;
-    CGXWindow *window = gWindowByID(gDriver.dragWindowID);
+    CGXWindow *window = WXFWindowFromID(gDriver.dragWindowID);
     if (!window || !WXFDragShaderActivate(lib, libLength, fragment))
         return;
 
@@ -295,21 +235,21 @@ static void DriverStart(void) {
     gDriver.releasing = false;
     gDriver.haveLast = false;
     gDriver.velocity = CGPointZero;
-    gDriver.beginTime = gRealTime();
-    gSchedule(DriverTick, &gDriver, gDriver.beginTime);
+    gDriver.beginTime = WXFCurrentTime();
+    WXFScheduleCallback(DriverTick, &gDriver, gDriver.beginTime);
 }
 
 static void DriverUpdate(double now) {
     if (!gDriver.live || !gDriver.animation)
         return;
-    CGXWindow *window = gWindowByID(gDriver.dragWindowID);
+    CGXWindow *window = WXFWindowFromID(gDriver.dragWindowID);
     if (!window) {              // window went away
         DriverStop();
         return;
     }
 
     WXFDragAnimationRef anim = gDriver.animation;
-    now = gRealTime();
+    now = WXFCurrentTime();
     double durationSec = WXFDragAnimationGetDuration(anim) / 1e9;
     double delaySec = WXFDragAnimationGetDelay(anim) / 1e9;
 
@@ -324,7 +264,7 @@ static void DriverUpdate(double now) {
         progress = WXFDragAnimationEvaluateEasing(anim, (float)((now - gDriver.beginTime - delaySec) / durationSec));
     }
 
-    CGRect frame = gFrameBounds(window);
+    CGRect frame = WXFWindowGetFrame(window);
     CloneFollow(window);
     // Drag events arrive faster than the timer, so smooth the velocity and ignore samples too
     // close together to differentiate.
@@ -340,12 +280,12 @@ static void DriverUpdate(double now) {
         gDriver.lastTime = now;
     }
 
-    double cursor[2] = {0, 0};
+    CGPoint cursor;
     WXFDragFrame f = {
         .window = window,
         .frame = frame,
         .cursor = {0, 0},
-        .cursorValid = gGetCursor && gGetCursor(cursor) == 0,
+        .cursorValid = WXFGetCursorLocation(&cursor),
         .velocity = gDriver.velocity,
         .progress = progress,
         .elapsed = now - gDriver.beginTime,
@@ -353,7 +293,7 @@ static void DriverUpdate(double now) {
         .intensity = WXFDragAnimationGetIntensity(anim),
     };
     if (f.cursorValid)
-        f.cursor = CGPointMake(cursor[0], cursor[1]);
+        f.cursor = cursor;
 
     // Shader params first: slot 0 is the framework's (progress), slots 1-4 are the developer's.
     if (gDriver.shaderActive) {
@@ -381,13 +321,13 @@ static void DriverUpdate(double now) {
 static void DriverTick(void *ctx, double now) {
     DriverUpdate(now);
     if (gDriver.live)
-        gSchedule(DriverTick, &gDriver, gRealTime() + kFrameInterval);
+        WXFScheduleCallback(DriverTick, &gDriver, WXFCurrentTime() + kFrameInterval);
 }
 
 static void DriverRelease(void) {
     if (!gDriver.live || gDriver.releasing)
         return;
-    double now = gRealTime();
+    double now = WXFCurrentTime();
     double durationSec = WXFDragAnimationGetDuration(gDriver.animation) / 1e9;
     double delaySec = WXFDragAnimationGetDelay(gDriver.animation) / 1e9;
     gDriver.releaseProgress = WXFDragAnimationEvaluateEasing(
@@ -452,7 +392,7 @@ static void Dispatch(WXFDragPhase phase, CGXWindow *window, bool transformed) {
     // The server moves the window on every drag event; refresh the shader params (velocity) then.
     if (phase == WXFDragPhaseMove && window && gDriver.live && !gDriver.releasing &&
         window->window_id == gDriver.dragWindowID)
-        DriverUpdate(gRealTime());
+        DriverUpdate(WXFCurrentTime());
 
     // Release starts the relax-to-rest; the driver stops itself when it finishes.
     if (phase == WXFDragPhaseWillEnd && window && window->window_id == gDriver.dragWindowID)

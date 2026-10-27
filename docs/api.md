@@ -303,6 +303,41 @@ tweaks only when it starts, so restart it (`sudo killall WindowServer`, which lo
 `scripts/deploy.sh --logs` streams the `WXF` log lines. The layout maths (forward/inverse
 matrices, perspective, hit testing) is checked outside WindowServer.
 
+## Misc
+
+Declared in `WXFMisc.h`. The mid-level pieces the features are built from, for tweaks that need
+something the features don't offer. Each call wraps one WindowServer function and does nothing
+(returns 0, NULL or false) if that function is missing on this OS build; `WXFMiscIsAvailable(features)`
+says up front whether a group of calls will work. Call them on WindowServer's main thread. A window
+has one transform and one alpha, so a tweak that sets them on a window while Exposé or a drag
+shader is using it will fight with it.
+
+| Group | Functions |
+| --- | --- |
+| Availability | `WXFMiscIsAvailable(WXFMiscFeature...)` |
+| Matrices | `WXFMat4` with `WXFMat4Identity`, `Multiply`, `MakeTranslation`, `MakeScale`, `MakeRotationX/Y/Z`, `Invert`, `ProjectPoint`, `FlattenToPlane`; `WXFQuadContainsPoint` |
+| Clock | `WXFCurrentTime()`, `WXFScheduleCallback(fn, info, when)` (runs once, on the main thread) |
+| Cursor and displays | `WXFGetCursorLocation`, `WXFDisplayForPoint`, `WXFDisplayGetMain`, `WXFDisplayGetBounds`, `WXFWindowGetDisplay` |
+| Windows | `WXFWindowFromID`, `WXFWindowGetFrame` (ignores transforms), `WXFWindowGetClippedFrame` (with shadow), `WXFWindowGetScreenRect` (no shadow), `WXFWindowGetOwnerConnectionID`, `WXFCopyWindowList` |
+| Alpha | `WXFWindowGetAlphaFactor`, `WXFWindowSetAlpha`, `WXFWindowUpdate` |
+| Transforms | `WXFWindowApplyTransform(window, forward)` (give it the matrix that moves the window; it stores the inverse WindowServer wants), `WXFWindowResetTransform`, `WXFWindowSetTransform` (the stored matrix as is) |
+| Moving and ordering | `WXFWindowMoveBy`, `WXFOrderWindow`, `WXFOrderWindowList`, `WXFRebuildVisibleOrder`, `WXFLogVisibleOrderMode` |
+| Applications | `WXFForegroundConnection`, `WXFActivateWindowOwner` |
+
+```c
+// Tilt a window and fade it, then put it back.
+CGXWindow *w = WXFWindowFromID(windowID);
+CGRect f = WXFWindowGetFrame(w);
+WXFMat4 m = WXFMat4MakeTranslation(-CGRectGetMidX(f), -CGRectGetMidY(f), 0);
+m = WXFMat4Multiply(m, WXFMat4MakeRotationZ(0.2));
+m = WXFMat4Multiply(m, WXFMat4MakeTranslation(CGRectGetMidX(f), CGRectGetMidY(f), 0));
+WXFWindowApplyTransform(w, m);
+WXFWindowSetAlpha(w, 0.5f);
+// ...
+WXFWindowResetTransform(w);
+WXFWindowSetAlpha(w, 1.0f);
+```
+
 ## Base
 
 Declared in `WXFBase.h`.
@@ -313,6 +348,7 @@ Declared in `WXFBase.h`.
 | `WXFIsFrameworkSetUp()` | Whether `SetupFramework` has run. |
 | `WXFResolveServerSymbol(name)` | Looks up a WindowServer (SkyLight) symbol by raw Mach-O name, leading underscore included. NULL if absent on this OS build. |
 | `HookServer(name, replacement, &original)` | Hooks a WindowServer symbol through Gum. The framework's own hooks are all installed from one table in `WXFHooks.c`; tweaks rarely need this. |
+| `WXFResolveServerData(name)` | Like `WXFResolveServerSymbol` for a global variable: the variable's address, not a signed function pointer. |
 
 ## Adding framework features
 

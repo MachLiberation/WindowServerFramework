@@ -13,6 +13,7 @@
 #include <mach-o/loader.h>
 #include <mach-o/nlist.h>
 #include <mach-o/dyld.h>
+#include <ptrauth.h>
 #include "WXFHooks-Private.h"
 
 typedef bool (*GumInterceptorReplaceIMP)(void *, void *, void *, void *, void **);
@@ -75,6 +76,12 @@ bool WXFIsFrameworkSetUp(void) {
 
 void *WXFResolveServerSymbol(const char *Wanted) {
     return FindServerSymbol(Wanted);
+}
+
+// FindServerSymbol signs what it finds like a function pointer; for data that has to come off again.
+void *WXFResolveServerData(const char *Wanted) {
+    void *symbol = FindServerSymbol(Wanted);
+    return symbol ? ptrauth_strip(symbol, ptrauth_key_function_pointer) : NULL;
 }
 
 

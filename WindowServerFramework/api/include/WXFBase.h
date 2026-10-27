@@ -23,6 +23,10 @@ bool WXFIsFrameworkSetUp(void);
 /// Returns NULL if it can't be found.
 void *WXFResolveServerSymbol(const char *Wanted);
 
+/// Like WXFResolveServerSymbol, for a data symbol (a global variable): the address of the
+/// variable, not a signed function pointer. Returns NULL if it can't be found.
+void *WXFResolveServerData(const char *Wanted);
+
 
 typedef uint32_t WXFTypeID;
 #define WXFTypeIDInvalid ((WXFTypeID)UINT32_MAX)

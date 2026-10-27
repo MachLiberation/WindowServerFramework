@@ -38,6 +38,7 @@
 				api/include/WXFDragAnimation.h,
 				api/include/WXFEvent.h,
 				api/include/WXFExpose.h,
+				api/include/WXFMisc.h,
 				WindowServerFramework.h,
 			);
 			target = 18432AC8308FBCA3000F9648 /* WindowServerFramework */;

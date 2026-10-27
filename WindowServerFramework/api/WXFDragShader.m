@@ -14,6 +14,7 @@
 #include "WXFBase-Private.h"
 #include "WXFHooks-Private.h"
 #include <WindowServerFramework/WXFBase.h>
+#include <WindowServerFramework/WXFMisc.h>
 #include <CoreFoundation/CoreFoundation.h>
 #include <dispatch/dispatch.h>
 #include <dlfcn.h>
@@ -32,8 +33,6 @@
 #define kSymRenderEncoder "__ZN12MetalContext13RenderEncoderEv"
 #define kSymWindowGetFilter "_WSWindowGetFilter"
 #define kSymWindowSetFilter "_WSWindowSetFilter"
-#define kSymUpdateWindow "_updateWindow"
-#define kSymWindowByID "__ZL12window_by_idj"
 
 // Layout facts established by disassembly of the compositor (see SkyLightServer.h in the Vanish
 // reference): the filter's type and params are copied onto the composite layer every frame.
@@ -81,8 +80,6 @@ typedef void *(*RenderEncoderFn)(void *);
 typedef void *(*CopyPipelineFn)(void *, void *, bool, bool);
 typedef WXFWindowFilter *(*GetFilterFn)(CGXWindow *);
 typedef void (*SetFilterFn)(CGXWindow *, WXFWindowFilter *);
-typedef void (*UpdateWindowFn)(CGXConnection *, CGXWindow *);
-typedef CGXWindow *(*WindowByIDFn)(uint32_t);
 
 CreateSpecializedFn WXFShaderOrig_create_specialized;
 UberCompositeFn WXFShaderOrig_uber_composite;
@@ -93,8 +90,6 @@ static CreateShaderFn create_shader;
 static RenderEncoderFn render_encoder;
 static GetFilterFn window_get_filter;
 static SetFilterFn window_set_filter;
-static UpdateWindowFn update_window;
-static WindowByIDFn window_by_id;
 
 static bool gHooksReady;
 
@@ -298,12 +293,11 @@ static bool EnsureHooks(void) {
     render_encoder  = (RenderEncoderFn)WXFResolveServerSymbol(kSymRenderEncoder);
     window_get_filter = (GetFilterFn)WXFResolveServerSymbol(kSymWindowGetFilter);
     window_set_filter = (SetFilterFn)WXFResolveServerSymbol(kSymWindowSetFilter);
-    update_window   = (UpdateWindowFn)WXFResolveServerSymbol(kSymUpdateWindow);
-    window_by_id    = (WindowByIDFn)WXFResolveServerSymbol(kSymWindowByID);
 
     // The compositor hooks (WXFHooks.c) install all or none: a partial set would substitute a
     // shader whose arguments never get bound, and an unbound argument buffer reads GPU garbage.
-    bool all = create_shader && render_encoder && window_get_filter && window_set_filter && window_by_id;
+    bool all = create_shader && render_encoder && window_get_filter && window_set_filter &&
+               WXFMiscIsAvailable(WXFMiscFeatureCore);
     done = true;
     if (!all)
         WXF_LOG("WXF shader: required WindowServer symbols missing, shader hooks not installed");
@@ -389,8 +383,7 @@ bool WXFDragShaderAttach(CGXWindow *window, const float params[kWXFFilterParamCo
     atomic_fetch_add_explicit(&gAttachedCount, 1, memory_order_acq_rel);
     window_set_filter(window, f);
     WXF_LOG("WXF shader: attached filter to wid=%u kind=%d", window->window_id, *(int *)((char *)window + 4));
-    if (update_window)
-        update_window(window->connection, window);
+    WXFWindowUpdate(window);
     return true;
 }
 
@@ -403,21 +396,19 @@ void WXFDragShaderUpdate(CGXWindow *window, const float params[kWXFFilterParamCo
     memcpy(gAttached.filter->params, params, sizeof gAttached.filter->params);
     if (data) memcpy(gData, data, sizeof gData);
     // Writing the params alone leaves the window clean, so the compositor would never re-read them.
-    if (update_window)
-        update_window(window->connection, window);
+    WXFWindowUpdate(window);
 }
 
 void WXFDragShaderDetach(CGXWindow *window) {
     if (!gAttached.filter)
         return;
-    if (!window && window_by_id)
-        window = window_by_id(gAttached.windowID);
+    if (!window)
+        window = WXFWindowFromID(gAttached.windowID);
 
     if (window && window_get_filter(window) == gAttached.filter) {
         window_set_filter(window, NULL);
         free(gAttached.filter);
-        if (update_window)
-            update_window(window->connection, window);
+        WXFWindowUpdate(window);
     }
     // else: the window is gone, and releasing it already freed the filter.
     gAttached.filter = NULL;
