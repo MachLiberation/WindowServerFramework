@@ -15,8 +15,8 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9DF66F08308FE7D40028DE21"
-               BuildableName = "libExampleTweak.dylib"
+               BlueprintIdentifier = "9DF67022309100010028DE21"
+               BuildableName = "libExposeExample.dylib"
                ReferencedContainer = "container:WindowServerFramework.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -50,8 +50,8 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9DF66F08308FE7D40028DE21"
-            BuildableName = "libExampleTweak.dylib"
+            BlueprintIdentifier = "9DF67022309100010028DE21"
+            BuildableName = "libExposeExample.dylib"
             ReferencedContainer = "container:WindowServerFramework.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

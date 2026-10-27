@@ -24,9 +24,14 @@ build/
 # Swift Package Manager
 .swiftpm/
 Package.resolved
-
 # Cocoapods
 Pods/
 
 # Carthage
 Carthage/
+SkyLightServer.h
+# Reference material from Vanish (not part of the framework)
+Dissolve.metal
+Common.metal
+WaterSim.h
+Vanish.c

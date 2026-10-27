@@ -2,6 +2,7 @@
 #define WXFBASE_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -14,6 +15,17 @@ extern "C" {
 #endif
 
 void HookServer(const char *Wanted, void * ReplacementFunc, void **OriginalPtr);
+
+/// Whether SetupFramework has been called with a Gum interceptor (hooks can be installed).
+bool WXFIsFrameworkSetUp(void);
+
+/// Resolves a WindowServer-internal symbol by its raw Mach-O name (leading underscore included).
+/// Returns NULL if it can't be found.
+void *WXFResolveServerSymbol(const char *Wanted);
+
+/// Like WXFResolveServerSymbol, for a data symbol (a global variable): the address of the
+/// variable, not a signed function pointer. Returns NULL if it can't be found.
+void *WXFResolveServerData(const char *Wanted);
 
 
 typedef uint32_t WXFTypeID;
