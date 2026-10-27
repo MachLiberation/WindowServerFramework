@@ -15,6 +15,7 @@
 #include "WXFBase.h"
 #include <stddef.h>
 #include <stdbool.h>
+#include <os/log.h>
 
 // --- Declarations ---------------------------------------------------------------------------
 // Replacements are called with their real signatures by WindowServer; the table only needs their
@@ -47,6 +48,10 @@ HOOK_DECL(WXFEvent, Annotated)
 
 // Menu bar placement (WXFMenuBar.m)
 HOOK_DECL(WXFMenuBar, Bounds)
+
+// Window <-> CAContext tracking (WXFCAContextRetriever.m)
+HOOK_DECL(WXFCAContext, Bind)
+HOOK_DECL(WXFCAContext, Destroy)
 
 // --- Table ----------------------------------------------------------------------------------
 typedef struct {
@@ -96,6 +101,13 @@ static const WXFHookEntry kHooks[] = {
     // the window, the drag region, the status items and what clients are told.
     HOOK(WXFHookGroupMenuBar, WXFMenuBar, Bounds,
          "__ZL25menu_bar_bounds_for_spaceP19PKGManagedMenuSpace")
+
+    // -- CAContext tracking. WSWindowBindRemoteCAClientContext(CGXWindow *, uint32_t contextID) is
+    // where _XCreateWindow and _XSetWindowLayerContext hand an app's context to its window (both
+    // reach CGXWindow::initialize_ca_content_for_context, or WSCALayerBackingInitialize when the
+    // CAWindowContent feature is off). ~CGXWindow(CGXWindow *) ends the window's life.
+    HOOK(WXFHookGroupCAContext, WXFCAContext, Bind, "_WSWindowBindRemoteCAClientContext")
+    HOOK(WXFHookGroupCAContext, WXFCAContext, Destroy, "__ZN9CGXWindowD2Ev")
 };
 
 // --- Installation ---------------------------------------------------------------------------
@@ -119,4 +131,6 @@ bool WXFHooksInstall(WXFHookGroup group) {
 
 void WXFHooksInstallAll(void) {
     WXFHooksInstall(WXFHookGroupDrag);
+    if (!WXFHooksInstall(WXFHookGroupCAContext))
+        os_log(OS_LOG_DEFAULT, "WXF hooks: CAContext hooks not available on this build");
 }

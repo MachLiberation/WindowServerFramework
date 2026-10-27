@@ -318,6 +318,32 @@ once. `MenuBarExample` makes the bar 36 points tall and binds Control + Option +
 (thickness) and `\` (system height). Moving the bar to another edge is not offered; what that needs is
 written up in [menubar-internals.md](menubar-internals.md).
 
+## CAContext retriever
+
+```c
+#include <WindowServerFramework/WXFCAContextRetriever.h>
+
+static void NewContext(CGWindowID window, WXF_CAContextID context) { /* ... */ }
+
+WXFCAContextRetrieverRef r = WXFCAContextRetrieverCreate();       // NULL if the hooks can't install
+WXFCAContextRetrieverRegisterNewContextCallback(r, NewContext);
+CFDictionaryRef all = WXFCAContextRetrieverObtainContexts(r);     // CFNumber window id -> CFNumber context id
+```
+
+Reports the `CAContext` each application window is drawn into: the one the app handed
+WindowServer when it created the window, or later swapped in. The callback runs on WindowServer's
+main thread when a window gets a context or a different one, and the dictionary is a snapshot of
+every window that has one. Entries go away with their windows. Windows WindowServer makes for itself
+(menu bar, shields) are not included, and neither are windows bound before `SetupFramework` ran.
+The tracking is process-wide, so any number of retrievers (and tweaks) see the same windows; each
+retriever has its own callback. Evidence in [cacontext-internals.md](cacontext-internals.md).
+
+`CAContextExample` is built on it: with Control + Option + Command held, `C` over a window spawns a
+live clone of it beside it (a window of the tweak's own, bound to the source's context), `C` over a
+clone removes it, and `R` removes every clone. The framework only supplies the ids; making the window
+is in the tweak. A window that only shows someone else's context is not repainted when the source
+changes, so the example invalidates each clone 60 times a second (`_updateWindow`, see the internals doc).
+
 ## Misc
 
 Declared in `WXFMisc.h`. The mid-level pieces the features are built from, for tweaks that need

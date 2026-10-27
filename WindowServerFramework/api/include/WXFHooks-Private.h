@@ -25,6 +25,9 @@ typedef enum {
     WXFHookGroupEventPointer,
     /// The menu bar's rectangle (WXFMenuBar.m). Installed on first use.
     WXFHookGroupMenuBar,
+    /// Which CAContext each app window hosts (WXFCAContextRetriever.m). Installed as soon as
+    /// SetupFramework has run, so the map is complete for windows made afterwards.
+    WXFHookGroupCAContext,
     WXFHookGroupCount
 } WXFHookGroup;
 
