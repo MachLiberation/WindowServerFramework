@@ -1,207 +1,213 @@
-# WindowServerExtensions API
+# WindowServerFramework API
 
-This document defines the public API surface for WindowServerExtensions. The goal is to provide a stable, high-level customization API for developers without requiring them to reverse engineer internal WindowServer behavior.
+WindowServerFramework is a shared library that Ammonia tweaks use to customize WindowServer
+without reverse engineering it themselves. The API is plain C, prefixed `WXF`. The internals it
+relies on are written up in [drag-internals.md](drag-internals.md).
 
-The public API is intentionally designed to read like a C-facing interface, with names prefixed by `WSE`. The implementation may call private WindowServer internals behind the scenes, but the API itself should remain clean and understandable.
+## Setup
 
-Examples:
+The framework is one dynamic library, installed at
+`/private/var/ammonia/core/tweaks/WindowServerFramework.framework`. Tweaks link against it, and
+dyld loads that single copy for all of them, so it hooks WindowServer once no matter how many
+tweaks use it. Where two tweaks want the same thing (for instance two drag shaders), the later
+one wins for that drag.
 
-- `WSEWorkspaceTransition.effect = WSETransitionEffectSlide;`
-- `WSEWorkspaceTransition.effect = WSETransitionEffectCube;`
-- `WSEWorkspaceTransition.effect = WSETransitionEffectWarp;`
-- `WSEWindowAppearance.cornerRadius = 18.0;`
-- `WSEWindowBorder.enabled = true;`
-- `WSEWindowBorder.color = WSEColorSystemBlue;`
-- `WSEWorkspaceLayout.spacing = 24.0;`
+Call `SetupFramework` first, from your tweak's `LoadFunction`, with the Gum interceptor Ammonia
+passes in:
 
-## WSETransitionEffect
+```c
+#include <WindowServerFramework/WindowServerFramework.h>
 
-The workspace transition effect enum defines the motion style used when switching or animating between workspaces.
+__attribute__((visibility("default")))
+void LoadFunction(void *gum_interceptor) {
+    SetupFramework(gum_interceptor);
+    // ...
+}
+```
 
-| API | Type | What it does |
-| --- | --- | --- |
-| `WSETransitionEffectInstant` | enum | Instantly switches without animation. Useful for immediate transitions or accessibility modes. |
-| `WSETransitionEffectSlide` | enum | Slides the workspace content in a direction. |
-| `WSETransitionEffectFade` | enum | Fades one workspace into another. |
-| `WSETransitionEffectZoom` | enum | Zooms the outgoing or incoming workspace for a cinematic feel. |
-| `WSETransitionEffectCube` | enum | Simulates a cube-style 3D rotation between workspaces. |
-| `WSETransitionEffectFlip` | enum | Flips the workspace as if it were a card or page. |
-| `WSETransitionEffectPush` | enum | Pushes the incoming workspace across the screen. |
-| `WSETransitionEffectCover` | enum | Covers the current workspace with the incoming one. |
-| `WSETransitionEffectReveal` | enum | Reveals the next workspace beneath the current content. |
-| `WSETransitionEffectSwipe` | enum | Swipes the workspace across the screen with a simple directional motion. |
-| `WSETransitionEffectWarp` | enum | Distorts the workspace in a more dramatic, stylized motion. |
-| `WSETransitionEffectMorph` | enum | Morphs the visual content between states with a fluid shape transition. |
-| `WSETransitionEffectRipple` | enum | Produces a ripple-like distortion when switching workspaces. |
-| `WSETransitionEffectBlur` | enum | Blurs the destination or source view during the transition. |
-| `WSETransitionEffectGlide` | enum | Uses a soft, smooth pan or glide animation. |
-| `WSETransitionEffectCustom` | enum | Allows a developer-defined transition implementation to be plugged in. |
+`scripts/deploy.sh [Target...]` builds, signs and installs tweak targets and the framework.
+Ammonia only loads tweaks when WindowServer starts, so restart it afterwards
+(`sudo killall WindowServer`; this logs you out).
 
-## WSETransitionPreset
+## Drag shaders
 
-Predefined transition presets that combine effect, direction, duration, and motion profile into a ready-made configuration.
+Draw a dragged window through your own Metal fragment shader: jello, trails, ripples, anything
+that can be done from a snapshot of the window. The framework supplies the stand-in window, the
+geometry and the timing. The effect lives entirely in your tweak.
 
-| API | Type | What it does |
-| --- | --- | --- |
-| `WSETransitionPresetNone` | enum | No transition; immediate switch. |
-| `WSETransitionPresetDefault` | enum | Standard transition for general workspace switching. |
-| `WSETransitionPresetSubtle` | enum | A soft and minimal animation with low visual intensity. |
-| `WSETransitionPresetCinematic` | enum | A more dramatic effect suited to presentations or immersive layouts. |
-| `WSETransitionPresetElastic` | enum | Springy motion with more bounce and energy. |
-| `WSETransitionPresetSystem` | enum | Uses a system-native style that matches the current desktop experience. |
+### How it works
 
-## WSEWorkspaceTransition
+When a drag with a shader begins, the framework takes a snapshot of the window, covers it with an
+overlay window that is the window's frame plus a margin, and hides the real window. Your shader
+draws the overlay each frame, sampling the snapshot. The overlay follows the window. When the
+drag ends, the overlay stays up until your effect has settled, then the real window comes back.
+The snapshot is static, so the window's contents don't update during the drag.
 
-Controls how workspace changes animate and feel.
+### One-call setup
 
-| API | Type | What it does |
-| --- | --- | --- |
-| `WSEWorkspaceTransition.effect` | `WSETransitionEffect` | Chooses the workspace transition animation style. Example: `slide`, `cube`, `warp`, `fade`, or `instant`. |
-| `WSEWorkspaceTransition.duration` | float | Sets the length of the transition animation in seconds. |
-| `WSEWorkspaceTransition.easing` | enum | Chooses the motion curve for the animation, such as `linear`, `easeInOut`, or `spring`. |
-| `WSEWorkspaceTransition.delay` | float | Adds a short delay before the transition starts. |
-| `WSEWorkspaceTransition.enabled` | bool | Enables or disables the custom workspace transition behavior. |
-| `WSEWorkspaceTransition.direction` | enum | Sets the direction of a directional transition, such as `left`, `right`, `up`, or `down`. |
-| `WSEWorkspaceTransition.intensity` | float | Sets the strength or visual impact of the transition effect. |
-| `WSEWorkspaceTransition.preset` | `WSETransitionPreset` | Applies a named preset configuration to the transition. |
+```c
+static bool JelloParams(const WXFDragFrame *f, float out[WXF_DRAG_SHADER_DATA_COUNT], void *info) {
+    // fill out[] for this frame; return true while the effect is still moving
+}
 
-## WSEWorkspaceLayout
+void LoadFunction(void *gum_interceptor) {
+    SetupFramework(gum_interceptor);
+    static const WXFDragShaderDescriptor jello = {
+        .fragment = "wxf_example_jello",
+        .params   = JelloParams,
+        .margin   = 170,
+    };
+    WXFDragInstallShader(&jello);
+}
+```
 
-Controls layout behavior for an individual workspace or desktop arrangement.
+`WXFDragInstallShader` makes every window drag use the shader, with the metallib embedded in the
+calling dylib. It returns an observer id for `WXFDragRemoveObserver`.
 
-| API | Type | What it does |
-| --- | --- | --- |
-| `WSEWorkspaceLayout.columns` | int | Sets the number of columns used by a workspace layout. |
-| `WSEWorkspaceLayout.rows` | int | Sets the number of rows used by a workspace layout. |
-| `WSEWorkspaceLayout.spacing` | float | Sets the spacing between tiles or windows in the workspace layout. |
-| `WSEWorkspaceLayout.padding` | float | Sets the padding around the workspace content. |
-| `WSEWorkspaceLayout.mode` | enum | Chooses the layout mode, such as `grid`, `stacked`, `floating`, or `custom`. |
-| `WSEWorkspaceLayout.snapToGrid` | bool | Enables or disables snapping items to a visual grid. |
+| Descriptor field | Meaning |
+| --- | --- |
+| `fragment` | Name of the fragment function in your metallib. Required. |
+| `params` | `WXFDragShaderParamFunction`, called every frame. Optional. |
+| `userInfo` | Passed back to `params`. |
+| `margin` | Points the shader may draw past the window on every side. Default 0. Large margins cost fill rate. |
+| `durationNanoseconds` | Minimum time the overlay lingers after release. 0 means 150 ms. |
+| `easing` | Curve for the framework's `progress` value. |
 
-## WSEWindowAppearance
+For more control, such as shading only some drags, build the animation yourself and attach it
+from a drag observer (see below).
 
-Controls high-level visual styling for windows and panes.
+### Writing the shader
 
-| API | Type | What it does |
-| --- | --- | --- |
-| `WSEWindowAppearance.cornerRadius` | float | Sets the rounded corner radius for a window or workspace region. |
-| `WSEWindowAppearance.shadow` | enum | Chooses a shadow style, such as `none`, `soft`, or `strong`. |
-| `WSEWindowAppearance.backgroundColor` | color | Sets the default background color for a window or frame. |
-| `WSEWindowAppearance.borderColor` | color | Sets the border color for a window or region. |
-| `WSEWindowAppearance.borderWidth` | float | Sets the width of the border. |
-| `WSEWindowAppearance.blur` | float | Controls the amount of blur applied to the window chrome or background effect. |
-| `WSEWindowAppearance.opacity` | float | Sets the opacity of the window surface or chrome. |
-| `WSEWindowAppearance.highlight` | color | Applies a highlight tint to the edge or top of a window. |
+Write a `.metal` file that includes `sdk/WXFDragShader.metal`, and compile it to a metallib at
+build time. WindowServer only loads finished libraries; it never compiles source. Embed the
+metallib in your dylib so installing the dylib alone is enough:
 
-## WSEWindowBorder
+```
+-sectcreate __DATA __wxf_shader <path to .metallib>
+```
 
-Controls the border that appears around windows, tiles, or desktop regions.
+(`DragShaderExample` does this with a "Compile drag shader" build phase and `OTHER_LDFLAGS`.)
 
-| API | Type | What it does |
-| --- | --- | --- |
-| `WSEWindowBorder.enabled` | bool | Enables or disables the border rendering for a window. |
-| `WSEWindowBorder.width` | float | Sets the width of the border. |
-| `WSEWindowBorder.size` | float | Alias for the border thickness, used for ergonomic configuration. |
-| `WSEWindowBorder.color` | color | Sets the color of the border. |
-| `WSEWindowBorder.borderColor` | color | Alias for `color`, included for readability in some codebases. |
-| `WSEWindowBorder.style` | enum | Chooses a border style, such as `solid`, `dashed`, `glow`, or `none`. |
-| `WSEWindowBorder.opacity` | float | Sets the transparency of the border. |
-| `WSEWindowBorder.inset` | float | Controls how far the border sits inward from the edge of the window. |
-| `WSEWindowBorder.radius` | float | Sets the border radius to match the corner curvature of the window. |
-| `WSEWindowBorder.glow` | float | Controls the glow intensity around the border. |
-| `WSEWindowBorder.shadow` | bool | Enables or disables a subtle shadow around the border edge. |
+```metal
+#include "../sdk/WXFDragShader.metal"
 
-## WSEWindowCorner
+fragment float4 my_effect(WXFDragStage in [[stage_in]],
+                          texture2d<float> tex2D [[texture(0)]],
+                          constant WXFDragArgs &args [[buffer(0)]],
+                          constant WXFDragExtra &extra [[buffer(WXF_EXTRA_INDEX)]],
+                          sampler samp [[sampler(0)]]) {
+    float2 uv = wxf_window_uv(in);
+    return tex2D.sample(samp, uv);   // premultiplied
+}
+```
 
-Controls window corner geometry and related visual shaping.
+The signature mirrors SkyLight's own `UberCompositeFragment`; keep the argument list exactly as
+shown. Return a premultiplied color. The helpers:
 
-| API | Type | What it does |
-| --- | --- | --- |
-| `WSEWindowCorner.radius` | float | Sets the corner radius of the window surface. |
-| `WSEWindowCorner.tl` | float | Sets the top-left corner radius independently. |
-| `WSEWindowCorner.tr` | float | Sets the top-right corner radius independently. |
-| `WSEWindowCorner.bl` | float | Sets the bottom-left corner radius independently. |
-| `WSEWindowCorner.br` | float | Sets the bottom-right corner radius independently. |
-| `WSEWindowCorner.enabled` | bool | Enables or disables custom corner shaping. |
-| `WSEWindowCorner.smoothing` | float | Controls how smooth the corners appear when drawn. |
-| `WSEWindowCorner.mask` | bool | Enables or disables masking to preserve the rounded shape. |
+| Helper | Returns |
+| --- | --- |
+| `wxf_window_uv(in)` | This fragment's 0..1 coordinate over the whole overlay. Sample the snapshot with it. |
+| `wxf_frame_size(extra)` | The overlay's size in points. |
+| `wxf_point(in, extra)` | This fragment's position in points, top-left origin. |
+| `wxf_window_frame(extra)` | The window's frame (content plus shadow) inside the overlay: `(min.x, min.y, max.x, max.y)`. |
+| `wxf_window_content(extra)` | The window's own pixels (no shadow), same layout. |
+| `wxf_in_frame(p, extra)`, `wxf_in_window(p, extra)` | Whether a point is inside the frame or the content. |
+| `wxf_progress(extra)` | The drag's eased progress: 0 at rest, about 1 while held, back to 0 after release. |
+| `wxf_param(extra, i)` | The i-th float your params function wrote (0 to `WXF_DATA_COUNT - 1`). |
 
-## WSEWindowBehavior
+`extra.bound` is 0 when the fragment is drawing a window that isn't the dragged one; return the
+plain texture then.
 
-Controls how windows respond to interaction and workspace updates.
+### The params function
 
-| API | Type | What it does |
-| --- | --- | --- |
-| `WSEWindowBehavior.focusOnActivate` | bool | Specifies whether a window should take focus when activated. |
-| `WSEWindowBehavior.animatedResize` | bool | Enables or disables animated resizing of a window. |
-| `WSEWindowBehavior.dragThreshold` | float | Sets the threshold required before dragging begins. |
-| `WSEWindowBehavior.doubleClickMaxDuration` | float | Sets the maximum time allowed for a double-click interaction. |
-| `WSEWindowBehavior.snapToEdge` | bool | Enables or disables snapping a window to screen edges. |
-| `WSEWindowBehavior.restoreAnimation` | enum | Chooses the animation style used when restoring a window. |
+```c
+typedef bool (*WXFDragShaderParamFunction)(const WXFDragFrame *frame,
+                                           float out[WXF_DRAG_SHADER_DATA_COUNT], void *userInfo);
+```
 
-## WSEAnimationCurve
+Called on WindowServer's main thread about every 1/60 s while the animation is live. Fill `out`
+(40 floats, zeroed first) and return true while your effect is still moving. After the release,
+the overlay stays up as long as you keep returning true (and for at least the animation's
+duration, at most 10 seconds), so a spring can settle instead of being cut off. Return false when
+you are done, ideally when the effect is at rest, so the hand back to the real window is
+invisible.
 
-Reusable animation configuration shared by transitions and motion effects.
+`WXFDragFrame`:
 
-| API | Type | What it does |
-| --- | --- | --- |
-| `WSEAnimationCurve.type` | enum | Chooses the motion curve type, such as `linear`, `easeIn`, `easeOut`, `easeInOut`, or `spring`. |
-| `WSEAnimationCurve.duration` | float | Controls the time spent for a given animation. |
-| `WSEAnimationCurve.amplitude` | float | Sets the intensity of spring or bounce behavior. |
-| `WSEAnimationCurve.period` | float | Sets the oscillation period for spring-based motion. |
+| Field | Meaning |
+| --- | --- |
+| `window` | The dragged window. |
+| `frame` | The window's frame in screen coordinates. |
+| `cursor`, `cursorValid` | The cursor in screen coordinates, when it could be read. |
+| `velocity` | Window velocity in points per second, smoothed. |
+| `progress` | Eased 0..1 amount (the spring curve can overshoot). |
+| `elapsed` | Seconds since the drag began. |
+| `releasing` | True once the window has been released. |
+| `intensity` | The animation's intensity setting, percent, for your own use. |
 
-## WSEWorkspaceEffect
+### Building the animation yourself
 
-High-level effects that can be applied to a workspace or desktop environment.
+`WXFDragAnimation` is the object `WXFDragInstallShader` builds for each drag.
 
-| API | Type | What it does |
-| --- | --- | --- |
-| `WSEWorkspaceEffect.type` | enum | Selects an effect for the workspace, such as `none`, `slide`, `fade`, `blur`, `zoom`, `cube`, `warp`, or `custom`. |
-| `WSEWorkspaceEffect.intensity` | float | Controls the strength of the applied effect. |
-| `WSEWorkspaceEffect.enabled` | bool | Enables or disables the workspace effect. |
-| `WSEWorkspaceEffect.duration` | float | Sets the duration of the effect animation. |
+| Function | What it does |
+| --- | --- |
+| `WXFDragAnimationCreate()` | New animation, +1 retained. Defaults: 150 ms, ease in/out, no delay, intensity 100, no shader. |
+| `WXFDragAnimationSetShader(anim, metallib, length, fragment, params, userInfo)` | Uses a metallib you loaded. The bytes are copied. |
+| `WXFDragAnimationSetShaderFile(anim, path, fragment, params, userInfo)` | As above, reading a file. |
+| `WXFDragAnimationSetEmbeddedShader(anim, fragment, params, userInfo)` | Uses the metallib embedded in the calling image. |
+| `WXFDragAnimationGetShader(...)` | Reads the configuration back. |
+| `WXFDragAnimationSetMargin` / `GetMargin` | Points the shader may draw past the window (0 to 2000). |
+| `WXFDragAnimationSetDuration` / `GetDuration` | Nanoseconds for `progress` to go 0 to 1, and back after release. |
+| `WXFDragAnimationSetEasing` / `GetEasing` | `EaseInEaseOut`, `Spring` or `Linear`. |
+| `WXFDragAnimationSetDelay` / `GetDelay` | Nanoseconds before progress starts rising. |
+| `WXFDragAnimationSetIntensity` / `GetIntensity` | Percent, passed to your params function. |
+| `WXFDragAnimationEvaluateEasing(anim, t)` | Applies the easing curve to a linear 0..1 value. |
 
-## WSEAccessibility
+Release an animation with `WXFRelease` when you are done with it. The drag retains the one you
+attach.
 
-Accessibility-focused behavior to ensure WindowServer customization remains usable and inclusive.
+## Drag events
 
-| API | Type | What it does |
-| --- | --- | --- |
-| `WSEAccessibility.reduceMotion` | bool | Enables reduced-motion behavior when the user prefers less animation. |
-| `WSEAccessibility.highContrast` | bool | Activates a high-contrast mode for window decorations and content. |
-| `WSEAccessibility.focusOutline` | enum | Chooses how focus indicators are displayed around windows or controls. |
-| `WSEAccessibility.voiceOverHints` | bool | Enables assistive announcements for custom workspace transitions and layout actions. |
+`WXFDragAddObserver(mask, callback, userInfo)` calls you on WindowServer's thread for each drag
+event in `mask`; keep it fast. `WXFDragRemoveObserver` removes it. The context is only valid
+inside the callback.
 
-## WSEGlobalSettings
+| Phase | When |
+| --- | --- |
+| `WXFDragPhaseBegin` | The user began dragging a window. |
+| `WXFDragPhasePropose` | A new position is proposed, before it is committed. |
+| `WXFDragPhaseMove` | A movement was committed. |
+| `WXFDragPhaseWillEnd` | The drag is about to end. |
+| `WXFDragPhaseDidEnd` | The drag ended. |
+| `WXFDragPhaseAnimationBegin` | WindowServer applied a drag transform animation. |
+| `WXFDragPhaseAnimationEnd` | WindowServer removed it. |
+| `WXFDragPhaseAll` | All of the above. |
 
-Global API settings for configuring the framework at runtime.
+Inside a callback:
 
-| API | Type | What it does |
-| --- | --- | --- |
-| `WSEGlobalSettings.debugLogging` | bool | Enables or disables debug logging for WindowServer customization hooks. |
-| `WSEGlobalSettings.usePrivateApis` | bool | Allows or disallows private-system implementation details when required. |
-| `WSEGlobalSettings.defaultTransition` | enum | Sets the default workspace transition style used when no override is provided. |
-| `WSEGlobalSettings.defaultAnimationCurve` | enum | Sets the default motion curve used by transitions and effects. |
+| Function | Returns |
+| --- | --- |
+| `WXFDragContextGetPhase` | The phase that triggered the callback. |
+| `WXFDragContextGetWindow` | The dragged `CGXWindow *`, or NULL for phases reported without one. |
+| `WXFDragContextIsTransformed` | Whether this is a transformed-window drag. |
+| `WXFDragContextGetAnimation` | The animation attached to this drag, or NULL. |
+| `WXFDragContextSetAnimation(context, anim)` | Attaches an animation to the drag in progress and starts it. NULL stops it at once and restores normal drawing. Call it from Begin or later. |
 
-## Implementation Notes
+Tiled-space drags are not hooked yet.
 
-- All public symbols should be prefixed with `WSE`.
-- The implementation may use WindowServer, SLS, QuartzCore, CoreGraphics, or equivalent underlying system APIs internally.
-- Public APIs should remain high-level and avoid exposing raw WindowServer reverse-engineering details.
-- This design is intentionally abstract so developers can customize behavior without needing intimate knowledge of private WindowServer internals.
-- Transition effects should be additive and composable with direction, duration, easing, and intensity.
-- Border and corner APIs should remain compatible with both simple global styles and per-window overrides.
-- Future additions should remain additive and backwards-compatible when possible.
+## Base
 
-## Planned API Families
+Declared in `WXFBase.h`.
 
-The following families are intended to be added as the framework matures:
+| Function | What it does |
+| --- | --- |
+| `WXFRetain` / `WXFRelease` / `WXFGetTypeID` | Reference counting for framework objects such as animations. |
+| `WXFIsFrameworkSetUp()` | Whether `SetupFramework` has run. |
+| `WXFResolveServerSymbol(name)` | Looks up a WindowServer (SkyLight) symbol by raw Mach-O name, leading underscore included. NULL if absent on this OS build. |
+| `HookServer(name, replacement, &original)` | Hooks a WindowServer symbol through Gum. The framework's own hooks are all installed from one table in `WXFHooks.c`; tweaks rarely need this. |
 
-- `WSEWorkspaceAnimation`
-- `WSEWindowDecoration`
-- `WSEAppOverride`
-- `WSEDesktopBinding`
-- `WSEScreenProfile`
-- `WSEThemePalette`
+## Adding framework features
 
-This document is a design reference and should be treated as the public contract for the implementation work that follows.
+Each feature gets its own example tweak target, named `<Feature>Example`. Hooks go in the table
+in `api/WXFHooks.c`, never installed from feature files. See `AGENTS.md` for the rules and for
+how to ground new hooks in IDA.
