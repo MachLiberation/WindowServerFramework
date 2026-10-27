@@ -25,6 +25,8 @@
 		18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = WindowServerFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D593740309062FC002AE404 /* drag-internals.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "drag-internals.md"; sourceTree = "<group>"; };
 		9D593741309062FC002AE404 /* expose-internals.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "expose-internals.md"; sourceTree = "<group>"; };
+		9DF67151309100010028DE21 /* cacontext-internals.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "cacontext-internals.md"; sourceTree = "<group>"; };
+		9DF67150309100010028DE21 /* menubar-internals.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "menubar-internals.md"; sourceTree = "<group>"; };
 		9DF66F09308FE7D40028DE21 /* libDragShaderExample.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libDragShaderExample.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DF66F0E308FE7E90028DE21 /* Tweak.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tweak.m; sourceTree = "<group>"; };
 		9DF66F10308FE7F00028DE21 /* DragShaderExample.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = DragShaderExample.metal; sourceTree = "<group>"; };
@@ -106,6 +108,8 @@
 				1819FF7A308FC14500F9C014 /* api.md */,
 				9D593740309062FC002AE404 /* drag-internals.md */,
 				9D593741309062FC002AE404 /* expose-internals.md */,
+				9DF67150309100010028DE21 /* menubar-internals.md */,
+				9DF67151309100010028DE21 /* cacontext-internals.md */,
 			);
 			path = docs;
 			sourceTree = "<group>";
@@ -248,11 +252,8 @@
 			buildConfigurationList = 9DF67023309100010028DE21 /* Build configuration list for PBXNativeTarget "ExposeExample" */;
 			buildPhases = (
 				9DF6701F309100010028DE21 /* Headers */,
-				9DF6711F309100010028DE21 /* Headers */,
 				9DF67020309100010028DE21 /* Sources */,
-				9DF67120309100010028DE21 /* Sources */,
 				9DF67021309100010028DE21 /* Frameworks */,
-				9DF67121309100010028DE21 /* Frameworks */,
 			);
 			buildRules = (
 			);
