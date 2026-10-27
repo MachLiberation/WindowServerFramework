@@ -15,9 +15,18 @@ struct __WXFWorkspaceTransition {
     float intensity;
 };
 
+static void destructor(WXFTypeRef ref){
+    struct __WXFWorkspaceTransition *obj = (struct __WXFWorkspaceTransition *)ref;
+    
+    if (obj->enabled){
+        WXFWorkspaceTransitionSetEnabled(obj,
+                                         false);
+    }
+}
+
 static const WXFClass kWorkspaceTransitionClass = {
     .name = "WXFWorkspaceTransition",
-    .destructor = NULL,        
+    .destructor = destructor,
     .equal = NULL,
 };
 
