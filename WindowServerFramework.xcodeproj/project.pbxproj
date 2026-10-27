@@ -14,11 +14,11 @@
 		9DF66F12308FE7F00028DE21 /* Tweak.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF66F0E308FE7E90028DE21 /* Tweak.m */; };
 		9DF67018309014660028DE21 /* WindowServerFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */; };
 		9DF6701D309100010028DE21 /* Tweak.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF6701B309100010028DE21 /* Tweak.m */; };
-		9DF6721D309100010028DE21 /* Tweak.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF6721B309100010028DE21 /* Tweak.m */; };
 		9DF6701E309100010028DE21 /* WindowServerFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */; };
-		9DF6721E309100010028DE21 /* WindowServerFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */; };
 		9DF6713D309100010028DE21 /* Tweak.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF6713B309100010028DE21 /* Tweak.m */; };
 		9DF6713E309100010028DE21 /* WindowServerFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */; };
+		9DF6721D309100010028DE21 /* Tweak.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF6721B309100010028DE21 /* Tweak.m */; };
+		9DF6721E309100010028DE21 /* WindowServerFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,19 +27,19 @@
 		18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = WindowServerFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D593740309062FC002AE404 /* drag-internals.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "drag-internals.md"; sourceTree = "<group>"; };
 		9D593741309062FC002AE404 /* expose-internals.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "expose-internals.md"; sourceTree = "<group>"; };
-		9DF67151309100010028DE21 /* cacontext-internals.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "cacontext-internals.md"; sourceTree = "<group>"; };
-		9DF67150309100010028DE21 /* menubar-internals.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "menubar-internals.md"; sourceTree = "<group>"; };
 		9DF66F09308FE7D40028DE21 /* libDragShaderExample.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libDragShaderExample.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DF66F0E308FE7E90028DE21 /* Tweak.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tweak.m; sourceTree = "<group>"; };
 		9DF66F10308FE7F00028DE21 /* DragShaderExample.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = DragShaderExample.metal; sourceTree = "<group>"; };
 		9DF6701A309100010028DE21 /* libExposeExample.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libExposeExample.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		9DF6721A309100010028DE21 /* libNiriKnockoffExample.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libNiriKnockoffExample.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DF6701B309100010028DE21 /* Tweak.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tweak.m; sourceTree = "<group>"; };
-		9DF6721B309100010028DE21 /* Tweak.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tweak.m; sourceTree = "<group>"; };
 		9DF6711A309100010028DE21 /* libMenuBarExample.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libMenuBarExample.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DF6711B309100010028DE21 /* Tweak.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tweak.m; sourceTree = "<group>"; };
 		9DF6713A309100010028DE21 /* libCAContextExample.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libCAContextExample.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DF6713B309100010028DE21 /* Tweak.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tweak.m; sourceTree = "<group>"; };
+		9DF67150309100010028DE21 /* menubar-internals.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "menubar-internals.md"; sourceTree = "<group>"; };
+		9DF67151309100010028DE21 /* cacontext-internals.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "cacontext-internals.md"; sourceTree = "<group>"; };
+		9DF6721A309100010028DE21 /* libNiriKnockoffExample.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libNiriKnockoffExample.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		9DF6721B309100010028DE21 /* Tweak.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tweak.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -91,12 +91,6 @@
 				9DF6701E309100010028DE21 /* WindowServerFramework.framework in Frameworks */,
 			);
 		};
-		9DF67221309100010028DE21 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			files = (
-				9DF6721E309100010028DE21 /* WindowServerFramework.framework in Frameworks */,
-			);
-		};
 		9DF67121309100010028DE21 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
@@ -107,6 +101,12 @@
 			isa = PBXFrameworksBuildPhase;
 			files = (
 				9DF6713E309100010028DE21 /* WindowServerFramework.framework in Frameworks */,
+			);
+		};
+		9DF67221309100010028DE21 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+				9DF6721E309100010028DE21 /* WindowServerFramework.framework in Frameworks */,
 			);
 		};
 /* End PBXFrameworksBuildPhase section */
@@ -177,14 +177,6 @@
 			path = ExposeExample;
 			sourceTree = "<group>";
 		};
-		9DF6721C309100010028DE21 /* NiriKnockoffExample */ = {
-			isa = PBXGroup;
-			children = (
-				9DF6721B309100010028DE21 /* Tweak.m */,
-			);
-			path = NiriKnockoffExample;
-			sourceTree = "<group>";
-		};
 		9DF6711C309100010028DE21 /* MenuBarExample */ = {
 			isa = PBXGroup;
 			children = (
@@ -199,6 +191,14 @@
 				9DF6713B309100010028DE21 /* Tweak.m */,
 			);
 			path = CAContextExample;
+			sourceTree = "<group>";
+		};
+		9DF6721C309100010028DE21 /* NiriKnockoffExample */ = {
+			isa = PBXGroup;
+			children = (
+				9DF6721B309100010028DE21 /* Tweak.m */,
+			);
+			path = NiriKnockoffExample;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -219,17 +219,17 @@
 			files = (
 			);
 		};
-		9DF6721F309100010028DE21 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			files = (
-			);
-		};
 		9DF6711F309100010028DE21 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			files = (
 			);
 		};
 		9DF6713F309100010028DE21 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			files = (
+			);
+		};
+		9DF6721F309100010028DE21 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			files = (
 			);
@@ -287,21 +287,6 @@
 			productReference = 9DF6701A309100010028DE21 /* libExposeExample.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
-		9DF67222309100010028DE21 /* NiriKnockoffExample */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 9DF67223309100010028DE21 /* Build configuration list for PBXNativeTarget "NiriKnockoffExample" */;
-			buildPhases = (
-				9DF6721F309100010028DE21 /* Headers */,
-				9DF67220309100010028DE21 /* Sources */,
-				9DF67221309100010028DE21 /* Frameworks */,
-			);
-			buildRules = (
-			);
-			name = NiriKnockoffExample;
-			productName = NiriKnockoffExample;
-			productReference = 9DF6721A309100010028DE21 /* libNiriKnockoffExample.dylib */;
-			productType = "com.apple.product-type.library.dynamic";
-		};
 		9DF67122309100010028DE21 /* MenuBarExample */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9DF67123309100010028DE21 /* Build configuration list for PBXNativeTarget "MenuBarExample" */;
@@ -332,6 +317,21 @@
 			productReference = 9DF6713A309100010028DE21 /* libCAContextExample.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
+		9DF67222309100010028DE21 /* NiriKnockoffExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9DF67223309100010028DE21 /* Build configuration list for PBXNativeTarget "NiriKnockoffExample" */;
+			buildPhases = (
+				9DF6721F309100010028DE21 /* Headers */,
+				9DF67220309100010028DE21 /* Sources */,
+				9DF67221309100010028DE21 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			name = NiriKnockoffExample;
+			productName = NiriKnockoffExample;
+			productReference = 9DF6721A309100010028DE21 /* libNiriKnockoffExample.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -350,13 +350,13 @@
 					9DF67022309100010028DE21 = {
 						CreatedOnToolsVersion = 27.1;
 					};
-					9DF67222309100010028DE21 = {
-						CreatedOnToolsVersion = 27.1;
-					};
 					9DF67122309100010028DE21 = {
 						CreatedOnToolsVersion = 27.1;
 					};
 					9DF67142309100010028DE21 = {
+						CreatedOnToolsVersion = 27.1;
+					};
+					9DF67222309100010028DE21 = {
 						CreatedOnToolsVersion = 27.1;
 					};
 				};
@@ -434,12 +434,6 @@
 				9DF6701D309100010028DE21 /* Tweak.m in Sources */,
 			);
 		};
-		9DF67220309100010028DE21 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			files = (
-				9DF6721D309100010028DE21 /* Tweak.m in Sources */,
-			);
-		};
 		9DF67120309100010028DE21 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			files = (
@@ -450,6 +444,12 @@
 			isa = PBXSourcesBuildPhase;
 			files = (
 				9DF6713D309100010028DE21 /* Tweak.m in Sources */,
+			);
+		};
+		9DF67220309100010028DE21 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+				9DF6721D309100010028DE21 /* Tweak.m in Sources */,
 			);
 		};
 /* End PBXSourcesBuildPhase section */
@@ -703,35 +703,7 @@
 			};
 			name = Debug;
 		};
-		9DF67224309100010028DE21 /* Debug configuration for PBXNativeTarget "NiriKnockoffExample" */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				EXECUTABLE_PREFIX = lib;
-				MACH_O_TYPE = mh_dylib;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-			};
-			name = Debug;
-		};
 		9DF67025309100010028DE21 /* Release configuration for PBXNativeTarget "ExposeExample" */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				EXECUTABLE_PREFIX = lib;
-				MACH_O_TYPE = mh_dylib;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-			};
-			name = Release;
-		};
-		9DF67225309100010028DE21 /* Release configuration for PBXNativeTarget "NiriKnockoffExample" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
@@ -801,6 +773,34 @@
 			};
 			name = Release;
 		};
+		9DF67224309100010028DE21 /* Debug configuration for PBXNativeTarget "NiriKnockoffExample" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				MACH_O_TYPE = mh_dylib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		9DF67225309100010028DE21 /* Release configuration for PBXNativeTarget "NiriKnockoffExample" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				MACH_O_TYPE = mh_dylib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -838,16 +838,6 @@
 			);
 			defaultConfigurationName = Release;
 		};
-		9DF67223309100010028DE21 /* Build configuration list for PBXNativeTarget "NiriKnockoffExample" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				9DF67224309100010028DE21 /* Debug configuration for PBXNativeTarget "NiriKnockoffExample" */,
-				9DF67124309100010028DE21 /* Debug configuration for PBXNativeTarget "MenuBarExample" */,
-				9DF67225309100010028DE21 /* Release configuration for PBXNativeTarget "NiriKnockoffExample" */,
-				9DF67125309100010028DE21 /* Release configuration for PBXNativeTarget "MenuBarExample" */,
-			);
-			defaultConfigurationName = Release;
-		};
 		9DF67123309100010028DE21 /* Build configuration list for PBXNativeTarget "MenuBarExample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -861,6 +851,16 @@
 			buildConfigurations = (
 				9DF67144309100010028DE21 /* Debug configuration for PBXNativeTarget "CAContextExample" */,
 				9DF67145309100010028DE21 /* Release configuration for PBXNativeTarget "CAContextExample" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		9DF67223309100010028DE21 /* Build configuration list for PBXNativeTarget "NiriKnockoffExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9DF67224309100010028DE21 /* Debug configuration for PBXNativeTarget "NiriKnockoffExample" */,
+				9DF67124309100010028DE21 /* Debug configuration for PBXNativeTarget "MenuBarExample" */,
+				9DF67225309100010028DE21 /* Release configuration for PBXNativeTarget "NiriKnockoffExample" */,
+				9DF67125309100010028DE21 /* Release configuration for PBXNativeTarget "MenuBarExample" */,
 			);
 			defaultConfigurationName = Release;
 		};

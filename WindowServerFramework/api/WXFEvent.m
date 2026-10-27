@@ -127,13 +127,19 @@ bool WXFEventRemoveHandler(WXFEventHandlerID handler) {
 }
 
 // --- Dispatch -------------------------------------------------------------------------------
-static const WXFClass kEventClass = { .name = "WXFEvent", .destructor = NULL, .equal = NULL };
+static const WXFClass kEventClass = {
+    .name = "WXFEvent",
+    .destructor = NULL,
+    .equal = NULL,
+};
+
 static struct __WXFEvent *gEvent;
 static pthread_once_t gEventOnce = PTHREAD_ONCE_INIT;
 
 static void RegisterEventClass(void) {
     WXFTypeID id = WXFRegisterClass(&kEventClass);
     gEvent = (struct __WXFEvent *)WXFCreateInstance(id, sizeof *gEvent);
+    WXFMakeImmortal(gEvent);
 }
 
 // The last event offered, so an event that reaches a stage twice is only offered once.

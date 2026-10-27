@@ -36,12 +36,23 @@ WXFTypeRef WXFCreateInstance(WXFTypeID typeID, size_t size) {
 
 WXFTypeRef WXFRetain(WXFTypeRef obj) {
     WXFBase *base = (WXFBase *)obj;
-    atomic_fetch_add_explicit(&base->retainCount, 1, memory_order_relaxed);
+    uint32_t rc = atomic_load_explicit(&base->retainCount, memory_order_relaxed);
+
+    do {
+        if (rc == WXF_IMMORTAL_RC) return obj;
+        if (rc >= WXF_MAX_RC) abort();   // overflow: a retain leak bug... 4 billion retains is not normal
+    } while (!atomic_compare_exchange_weak_explicit(&base->retainCount,
+                                                    &rc, rc + 1,
+                                                    memory_order_relaxed,
+                                                    memory_order_relaxed));
     return obj;
 }
 
+
 void WXFRelease(WXFTypeRef obj) {
     WXFBase *base = (WXFBase *)obj;
+    if (atomic_load_explicit(&base->retainCount, memory_order_relaxed) == WXF_IMMORTAL_RC) return;
+    
     if (atomic_fetch_sub_explicit(&base->retainCount, 1, memory_order_release) == 1) {
         atomic_thread_fence(memory_order_acquire);
         if (base->cls->destructor) base->cls->destructor(obj);
@@ -51,4 +62,10 @@ void WXFRelease(WXFTypeRef obj) {
 
 WXFTypeID WXFGetTypeID(WXFTypeRef obj) {
     return ((const WXFBase *)obj)->typeID;
+}
+
+void WXFMakeImmortal(WXFTypeRef obj) {
+    if (!obj) return;
+    WXFBase *base = (WXFBase *)obj;
+    atomic_store_explicit(&base->retainCount, WXF_IMMORTAL_RC, memory_order_relaxed);
 }
