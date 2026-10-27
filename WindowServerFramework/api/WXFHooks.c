@@ -53,6 +53,10 @@ HOOK_DECL(WXFMenuBar, Bounds)
 HOOK_DECL(WXFCAContext, Bind)
 HOOK_DECL(WXFCAContext, Destroy)
 
+// Window frame shape, for decor (WXFDecor.m)
+HOOK_DECL(WXFDecor, FrameShape)
+HOOK_DECL(WXFDecor, FrameBounds)
+
 // --- Table ----------------------------------------------------------------------------------
 typedef struct {
     WXFHookGroup group;
@@ -108,6 +112,15 @@ static const WXFHookEntry kHooks[] = {
     // CAWindowContent feature is off). ~CGXWindow(CGXWindow *) ends the window's life.
     HOOK(WXFHookGroupCAContext, WXFCAContext, Bind, "_WSWindowBindRemoteCAClientContext")
     HOOK(WXFHookGroupCAContext, WXFCAContext, Destroy, "__ZN9CGXWindowD2Ev")
+
+    // -- Decor. CGXCopyScreenFrameShapeForWindow(CGXWindow *, int systemOffset) -> CGSRegion (+1): the
+    // window's shape grown by its shadow, which every visible/unobscured shape and the structural region
+    // the window's tree is composited within are made from. Decor outside it is cut off.
+    HOOK(WXFHookGroupDecor, WXFDecor, FrameShape, "_CGXCopyScreenFrameShapeForWindow")
+    // CGXWindow::frame_bounds() const -> CGRect: the shape grown by the shadow, computed on its own.
+    // ca_window_prep_ingestion_phase makes it the bounds of the window's CARenderUpdateBegin2; nothing
+    // outside it is rendered.
+    HOOK(WXFHookGroupDecor, WXFDecor, FrameBounds, "__ZNK9CGXWindow12frame_boundsEv")
 };
 
 // --- Installation ---------------------------------------------------------------------------
