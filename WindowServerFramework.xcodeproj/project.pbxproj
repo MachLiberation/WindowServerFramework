@@ -18,11 +18,19 @@
 		9DF6713D309100010028DE21 /* Tweak.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF6713B309100010028DE21 /* Tweak.m */; };
 		9DF6713E309100010028DE21 /* WindowServerFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */; };
 		9DF6721D309100010028DE21 /* Tweak.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF6721B309100010028DE21 /* Tweak.m */; };
-		9DF67A1D309100010028DE21 /* Tweak.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF67A1B309100010028DE21 /* Tweak.m */; };
-		9DF67B1D309100010028DE21 /* Tweak.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF67B1B309100010028DE21 /* Tweak.m */; };
 		9DF6721E309100010028DE21 /* WindowServerFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */; };
+		9DF67A1D309100010028DE21 /* Tweak.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF67A1B309100010028DE21 /* Tweak.m */; };
 		9DF67A1E309100010028DE21 /* WindowServerFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */; };
+		9DF67B1D309100010028DE21 /* Tweak.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF67B1B309100010028DE21 /* Tweak.m */; };
 		9DF67B1E309100010028DE21 /* WindowServerFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */; };
+		9DF67C30309100010028DE21 /* Tweak.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF67C10309100010028DE21 /* Tweak.m */; };
+		9DF67C31309100010028DE21 /* TBBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF67C11309100010028DE21 /* TBBar.m */; };
+		9DF67C32309100010028DE21 /* TBChrome.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF67C12309100010028DE21 /* TBChrome.m */; };
+		9DF67C33309100010028DE21 /* TBStripView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF67C13309100010028DE21 /* TBStripView.m */; };
+		9DF67C34309100010028DE21 /* TBAgent.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF67C14309100010028DE21 /* TBAgent.m */; };
+		9DF67C35309100010028DE21 /* TBTray.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF67C19309100010028DE21 /* TBTray.m */; };
+		9DF67C3A309100010028DE21 /* TBAppMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF67C3B309100010028DE21 /* TBAppMenu.m */; };
+		9DF67C50309100010028DE21 /* WindowServerFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,11 +51,25 @@
 		9DF67150309100010028DE21 /* menubar-internals.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "menubar-internals.md"; sourceTree = "<group>"; };
 		9DF67151309100010028DE21 /* cacontext-internals.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "cacontext-internals.md"; sourceTree = "<group>"; };
 		9DF6721A309100010028DE21 /* libNiriKnockoffExample.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libNiriKnockoffExample.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		9DF67A1A309100010028DE21 /* libDecorExample.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libDecorExample.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		9DF67B1A309100010028DE21 /* libDecorTabExample.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libDecorTabExample.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DF6721B309100010028DE21 /* Tweak.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tweak.m; sourceTree = "<group>"; };
+		9DF67A1A309100010028DE21 /* libDecorExample.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libDecorExample.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DF67A1B309100010028DE21 /* Tweak.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tweak.m; sourceTree = "<group>"; };
+		9DF67B1A309100010028DE21 /* libDecorTabExample.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libDecorTabExample.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DF67B1B309100010028DE21 /* Tweak.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tweak.m; sourceTree = "<group>"; };
+		9DF67C01309100010028DE21 /* libTaskbarExample.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libTaskbarExample.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		9DF67C10309100010028DE21 /* Tweak.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tweak.m; sourceTree = "<group>"; };
+		9DF67C11309100010028DE21 /* TBBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TBBar.m; sourceTree = "<group>"; };
+		9DF67C12309100010028DE21 /* TBChrome.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TBChrome.m; sourceTree = "<group>"; };
+		9DF67C13309100010028DE21 /* TBStripView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TBStripView.m; sourceTree = "<group>"; };
+		9DF67C14309100010028DE21 /* TBAgent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TBAgent.m; sourceTree = "<group>"; };
+		9DF67C15309100010028DE21 /* TBBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBBar.h; sourceTree = "<group>"; };
+		9DF67C16309100010028DE21 /* TBChrome.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBChrome.h; sourceTree = "<group>"; };
+		9DF67C17309100010028DE21 /* TBStripView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBStripView.h; sourceTree = "<group>"; };
+		9DF67C18309100010028DE21 /* TBAgent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBAgent.h; sourceTree = "<group>"; };
+		9DF67C19309100010028DE21 /* TBTray.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TBTray.m; sourceTree = "<group>"; };
+		9DF67C1A309100010028DE21 /* TBTray.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBTray.h; sourceTree = "<group>"; };
+		9DF67C3B309100010028DE21 /* TBAppMenu.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TBAppMenu.m; sourceTree = "<group>"; };
+		9DF67C3C309100010028DE21 /* TBAppMenu.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBAppMenu.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -56,12 +78,16 @@
 			publicHeaders = (
 				api/include/CGXWindow.h,
 				api/include/WXFBase.h,
+				api/include/WXFBus.h,
 				api/include/WXFCAContextRetriever.h,
 				api/include/WXFDecor.h,
+				api/include/WXFDock.h,
+				api/include/WXFDropdown.h,
 				api/include/WXFDrag.h,
 				api/include/WXFDragAnimation.h,
 				api/include/WXFEvent.h,
 				api/include/WXFExpose.h,
+				api/include/WXFHost.h,
 				api/include/WXFMenuBar.h,
 				api/include/WXFMisc.h,
 				api/include/WXFWorkspaceTransition.h,
@@ -130,6 +156,12 @@
 				9DF67B1E309100010028DE21 /* WindowServerFramework.framework in Frameworks */,
 			);
 		};
+		9DF67C05309100010028DE21 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+				9DF67C50309100010028DE21 /* WindowServerFramework.framework in Frameworks */,
+			);
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -158,6 +190,7 @@
 				9DF67B1C309100010028DE21 /* DecorTabExample */,
 				9DF6711C309100010028DE21 /* MenuBarExample */,
 				9DF6713C309100010028DE21 /* CAContextExample */,
+				9DF67C02309100010028DE21 /* TaskbarExample */,
 				9DF67017309014660028DE21 /* Frameworks */,
 				18432ACA308FBCA3000F9648 /* Products */,
 			);
@@ -174,6 +207,7 @@
 				9DF67B1A309100010028DE21 /* libDecorTabExample.dylib */,
 				9DF6711A309100010028DE21 /* libMenuBarExample.dylib */,
 				9DF6713A309100010028DE21 /* libCAContextExample.dylib */,
+				9DF67C01309100010028DE21 /* libTaskbarExample.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -242,6 +276,26 @@
 			path = DecorTabExample;
 			sourceTree = "<group>";
 		};
+		9DF67C02309100010028DE21 /* TaskbarExample */ = {
+			isa = PBXGroup;
+			children = (
+				9DF67C15309100010028DE21 /* TBBar.h */,
+				9DF67C16309100010028DE21 /* TBChrome.h */,
+				9DF67C17309100010028DE21 /* TBStripView.h */,
+				9DF67C18309100010028DE21 /* TBAgent.h */,
+				9DF67C10309100010028DE21 /* Tweak.m */,
+				9DF67C11309100010028DE21 /* TBBar.m */,
+				9DF67C12309100010028DE21 /* TBChrome.m */,
+				9DF67C13309100010028DE21 /* TBStripView.m */,
+				9DF67C19309100010028DE21 /* TBTray.m */,
+				9DF67C1A309100010028DE21 /* TBTray.h */,
+				9DF67C3B309100010028DE21 /* TBAppMenu.m */,
+				9DF67C3C309100010028DE21 /* TBAppMenu.h */,
+				9DF67C14309100010028DE21 /* TBAgent.m */,
+			);
+			path = TaskbarExample;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -281,6 +335,11 @@
 			);
 		};
 		9DF67B1F309100010028DE21 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			files = (
+			);
+		};
+		9DF67C03309100010028DE21 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			files = (
 			);
@@ -413,6 +472,21 @@
 			productReference = 9DF67B1A309100010028DE21 /* libDecorTabExample.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
+		9DF67C06309100010028DE21 /* TaskbarExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9DF67C07309100010028DE21 /* Build configuration list for PBXNativeTarget "TaskbarExample" */;
+			buildPhases = (
+				9DF67C03309100010028DE21 /* Headers */,
+				9DF67C04309100010028DE21 /* Sources */,
+				9DF67C05309100010028DE21 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			name = TaskbarExample;
+			productName = TaskbarExample;
+			productReference = 9DF67C01309100010028DE21 /* libTaskbarExample.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -446,6 +520,9 @@
 					9DF67B22309100010028DE21 = {
 						CreatedOnToolsVersion = 27.1;
 					};
+					9DF67C06309100010028DE21 = {
+						CreatedOnToolsVersion = 27.1;
+					};
 				};
 			};
 			buildConfigurationList = 18432AC3308FBCA3000F9648 /* Build configuration list for PBXProject "WindowServerFramework" */;
@@ -470,6 +547,7 @@
 				9DF67B22309100010028DE21 /* DecorTabExample */,
 				9DF67122309100010028DE21 /* MenuBarExample */,
 				9DF67142309100010028DE21 /* CAContextExample */,
+				9DF67C06309100010028DE21 /* TaskbarExample */,
 			);
 		};
 /* End PBXProject section */
@@ -551,6 +629,18 @@
 			isa = PBXSourcesBuildPhase;
 			files = (
 				9DF67B1D309100010028DE21 /* Tweak.m in Sources */,
+			);
+		};
+		9DF67C04309100010028DE21 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+				9DF67C30309100010028DE21 /* Tweak.m in Sources */,
+				9DF67C31309100010028DE21 /* TBBar.m in Sources */,
+				9DF67C32309100010028DE21 /* TBChrome.m in Sources */,
+				9DF67C33309100010028DE21 /* TBStripView.m in Sources */,
+				9DF67C35309100010028DE21 /* TBTray.m in Sources */,
+				9DF67C3A309100010028DE21 /* TBAppMenu.m in Sources */,
+				9DF67C34309100010028DE21 /* TBAgent.m in Sources */,
 			);
 		};
 /* End PBXSourcesBuildPhase section */
@@ -888,34 +978,6 @@
 			};
 			name = Debug;
 		};
-		9DF67A24309100010028DE21 /* Debug configuration for PBXNativeTarget "DecorExample" */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				EXECUTABLE_PREFIX = lib;
-				MACH_O_TYPE = mh_dylib;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-			};
-			name = Debug;
-		};
-		9DF67B24309100010028DE21 /* Debug configuration for PBXNativeTarget "DecorTabExample" */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				EXECUTABLE_PREFIX = lib;
-				MACH_O_TYPE = mh_dylib;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-			};
-			name = Debug;
-		};
 		9DF67225309100010028DE21 /* Release configuration for PBXNativeTarget "NiriKnockoffExample" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -929,6 +991,20 @@
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
+		};
+		9DF67A24309100010028DE21 /* Debug configuration for PBXNativeTarget "DecorExample" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				MACH_O_TYPE = mh_dylib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
 		};
 		9DF67A25309100010028DE21 /* Release configuration for PBXNativeTarget "DecorExample" */ = {
 			isa = XCBuildConfiguration;
@@ -944,6 +1020,20 @@
 			};
 			name = Release;
 		};
+		9DF67B24309100010028DE21 /* Debug configuration for PBXNativeTarget "DecorTabExample" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				MACH_O_TYPE = mh_dylib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
 		9DF67B25309100010028DE21 /* Release configuration for PBXNativeTarget "DecorTabExample" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -953,6 +1043,46 @@
 				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_PREFIX = lib;
 				MACH_O_TYPE = mh_dylib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		9DF67C08309100010028DE21 /* Debug configuration for PBXNativeTarget "TaskbarExample" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				MACH_O_TYPE = mh_dylib;
+				OTHER_LDFLAGS = (
+					"-framework",
+					AppKit,
+					"-framework",
+					QuartzCore,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		9DF67C09309100010028DE21 /* Release configuration for PBXNativeTarget "TaskbarExample" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				MACH_O_TYPE = mh_dylib;
+				OTHER_LDFLAGS = (
+					"-framework",
+					AppKit,
+					"-framework",
+					QuartzCore,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -1038,6 +1168,14 @@
 				9DF67124309100010028DE21 /* Debug configuration for PBXNativeTarget "MenuBarExample" */,
 				9DF67B25309100010028DE21 /* Release configuration for PBXNativeTarget "DecorTabExample" */,
 				9DF67125309100010028DE21 /* Release configuration for PBXNativeTarget "MenuBarExample" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		9DF67C07309100010028DE21 /* Build configuration list for PBXNativeTarget "TaskbarExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9DF67C08309100010028DE21 /* Debug configuration for PBXNativeTarget "TaskbarExample" */,
+				9DF67C09309100010028DE21 /* Release configuration for PBXNativeTarget "TaskbarExample" */,
 			);
 			defaultConfigurationName = Release;
 		};

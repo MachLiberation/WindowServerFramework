@@ -15,6 +15,7 @@
 #include <mach-o/dyld.h>
 #include <ptrauth.h>
 #include "WXFHooks-Private.h"
+#include <WindowServerFramework/WXFHost.h>
 
 typedef bool (*GumInterceptorReplaceIMP)(void *, void *, void *, void *, void **);
 typedef void (*GumInterceptorTransactionIMP)(void *);
@@ -97,9 +98,10 @@ void SetupFramework(void * ammonia_gum_interceptor) {
     // first call wins and later calls just make sure the startup hooks are in.
     if (gInterceptor == NULL)
         gInterceptor = ammonia_gum_interceptor;
-    WXFHooksInstallAll();
-    
-    
+    // The startup hooks are WindowServer's; the same SkyLight image is mapped into every process,
+    // but hooking its server-only functions anywhere else would do nothing but cost.
+    if (WXFGetHost() == WXFHostWindowServer)
+        WXFHooksInstallAll();
 }
 
 // resolver compares raw Mach-O names, so make sure Wanted uses the exact spelling stored in the table.

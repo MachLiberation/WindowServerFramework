@@ -48,6 +48,17 @@ HOOK_DECL(WXFEvent, Annotated)
 
 // Menu bar placement (WXFMenuBar.m)
 HOOK_DECL(WXFMenuBar, Bounds)
+HOOK_DECL(WXFMenuBar, EvalParts)
+HOOK_DECL(WXFMenuBar, Reveal)
+
+// The Dock's reserved rectangle (WXFDock.m)
+HOOK_DECL(WXFDock, SetRect)
+HOOK_DECL(WXFDock, GetRect)
+
+// Where a menu's dropdown appears (WXFDropdown.m)
+HOOK_DECL(WXFDropdown, Property)
+HOOK_DECL(WXFDropdown, Order)
+HOOK_DECL(WXFDropdown, Move)
 
 // Window <-> CAContext tracking (WXFCAContextRetriever.m)
 HOOK_DECL(WXFCAContext, Bind)
@@ -105,6 +116,28 @@ static const WXFHookEntry kHooks[] = {
     // the window, the drag region, the status items and what clients are told.
     HOOK(WXFHookGroupMenuBar, WXFMenuBar, Bounds,
          "__ZL25menu_bar_bounds_for_spaceP19PKGManagedMenuSpace")
+
+    // WS::Displays::Display::evaluate_display_parts(): the notch rectangle and the menu bar height
+    // (Display+504) every client's top inset is made from, and PKGDisplay's copy for the bar.
+    HOOK(WXFHookGroupMenuBarDisplayParts, WXFMenuBar, EvalParts,
+         "__ZN2WS8Displays7Display22evaluate_display_partsEv")
+    // managed_menu_space_synchronized_set_menu_bar_reveal(space, double reveal, bool): the one place
+    // a space's reveal is stored (or coordinated with its tiles).
+    HOOK(WXFHookGroupMenuBarReveal, WXFMenuBar, Reveal,
+         "__ZL51managed_menu_space_synchronized_set_menu_bar_revealP19PKGManagedMenuSpacedb")
+
+    // -- Dock rectangle. The Dock reports where it sits with _XSetDockRectWithReason (MIG, stored in
+    // the session at +216/+64 as four doubles) and every client reads it back with
+    // _XGetDockRectWithReason; AppKit subtracts it from NSScreen.visibleFrame.
+    HOOK(WXFHookGroupDockRect, WXFDock, SetRect, "__XSetDockRectWithReason")
+    HOOK(WXFHookGroupDockRect, WXFDock, GetRect, "__XGetDockRectWithReason")
+
+    // -- Dropdown placement. A client (MenuBarAgent) names where the next menu dropdown should go
+    // in a connection property (_XSetConnectionProperty); the app's window is moved as it is
+    // ordered in (_XOrderWindow) or as it places itself (_XMoveWindow).
+    HOOK(WXFHookGroupDropdown, WXFDropdown, Property, "__XSetConnectionProperty")
+    HOOK(WXFHookGroupDropdown, WXFDropdown, Order, "__XOrderWindow")
+    HOOK(WXFHookGroupDropdown, WXFDropdown, Move, "__XMoveWindow")
 
     // -- CAContext tracking. WSWindowBindRemoteCAClientContext(CGXWindow *, uint32_t contextID) is
     // where _XCreateWindow and _XSetWindowLayerContext hand an app's context to its window (both

@@ -25,6 +25,15 @@ typedef enum {
     WXFHookGroupEventPointer,
     /// The menu bar's rectangle (WXFMenuBar.m). Installed on first use.
     WXFHookGroupMenuBar,
+    /// The display's menu bar height and notch, which the work area follows (WXFMenuBar.m).
+    /// Installed with the first thickness.
+    WXFHookGroupMenuBarDisplayParts,
+    /// The menu bar's reveal, for keeping it visible (WXFMenuBar.m). Installed on first use.
+    WXFHookGroupMenuBarReveal,
+    /// The Dock's reserved rectangle (WXFDock.m). Installed on first use.
+    WXFHookGroupDockRect,
+    /// Where a menu's dropdown appears (WXFDropdown.m). Installed on first use.
+    WXFHookGroupDropdown,
     /// Which CAContext each app window hosts (WXFCAContextRetriever.m). Installed as soon as
     /// SetupFramework has run, so the map is complete for windows made afterwards.
     WXFHookGroupCAContext,

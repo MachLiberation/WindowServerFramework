@@ -10,12 +10,16 @@ FOUNDATION_EXPORT const unsigned char WindowServerFrameworkVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <WindowServerFramework/PublicHeader.h>
 #import <WindowServerFramework/WXFDecor.h>
+#import <WindowServerFramework/WXFDock.h>
+#import <WindowServerFramework/WXFDropdown.h>
 #import <WindowServerFramework/WXFDragAnimation.h>
 #import <WindowServerFramework/WXFDrag.h>
 #import <WindowServerFramework/WXFBase.h>
+#import <WindowServerFramework/WXFBus.h>
 #import <WindowServerFramework/WXFCAContextRetriever.h>
 #import <WindowServerFramework/WXFEvent.h>
 #import <WindowServerFramework/WXFExpose.h>
+#import <WindowServerFramework/WXFHost.h>
 #import <WindowServerFramework/WXFMenuBar.h>
 #import <WindowServerFramework/WXFMisc.h>
 #import <WindowServerFramework/WXFWorkspaceTransition.h>
