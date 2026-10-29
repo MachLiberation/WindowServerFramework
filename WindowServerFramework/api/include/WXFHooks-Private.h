@@ -40,6 +40,8 @@ typedef enum {
     /// The shape a window is composited within, widened by its decor (WXFDecor.m). Installed with
     /// the first decor.
     WXFHookGroupDecor,
+    /// Hotplug processing, for card observers (WXFCard.m). Installed with the first observer.
+    WXFHookGroupCardHotplug,
     WXFHookGroupCount
 } WXFHookGroup;
 

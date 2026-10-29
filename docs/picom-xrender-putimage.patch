@@ -1,0 +1,63 @@
+diff --git a/src/backend/xrender/xrender.c b/src/backend/xrender/xrender.c
+index b0156f2..ff254e2 100644
+--- a/src/backend/xrender/xrender.c
++++ b/src/backend/xrender/xrender.c
+@@ -969,10 +969,7 @@ static backend_t *xrender_init(session_t *ps, xcb_window_t target) {
+ 	xd->base.ops = xrender_ops;
+ 	xd->shm_fd = -1;
+ 
+-	if (!ensure_xshm(xd, initial_shm_size)) {
+-		free(xd);
+-		return NULL;
+-	}
++	// macOS patch: XQuartz's Xvfb has no MIT-SHM fd passing, so images go up with PutImage.
+ 
+ 	for (int i = 0; i <= MAX_ALPHA; ++i) {
+ 		double o = (double)i / (double)MAX_ALPHA;
+@@ -1101,7 +1098,6 @@ xrender_new_image(struct backend_base *base, enum backend_image_format format, i
+ static image_handle
+ xrender_new_image_from_pixels(struct backend_base *base, enum backend_image_format format,
+                               ivec2 size, int stride, const uint8_t *pixels) {
+-	auto xd = (struct xrender_data *)base;
+ 	assert(format == BACKEND_IMAGE_FORMAT_MASK || format == BACKEND_IMAGE_FORMAT_PIXMAP);
+ 
+ 	size_t bpp = format == BACKEND_IMAGE_FORMAT_MASK ? 1 : 4;
+@@ -1110,25 +1106,28 @@ xrender_new_image_from_pixels(struct backend_base *base, enum backend_image_form
+ 		log_error("Image is too big");
+ 		return NULL;
+ 	}
+-	if (!ensure_xshm(xd, (uint32_t)bytes)) {
+-		return NULL;
+-	}
+-
+ 	image_handle ret = xrender_new_image(base, format, size);
+ 	if (ret == NULL) {
+ 		return ret;
+ 	}
+ 
+-	memcpy(xd->shm, pixels, bytes);
+-
+ 	auto img = (struct xrender_image_data_inner *)ret;
+ 
+ 	xcb_gcontext_t gc = x_new_id(base->c);
+ 	xcb_create_gc(base->c->c, gc, img->pixmap, 0, NULL);
+-	bool success = XCB_AWAIT_VOID(
+-	    xcb_shm_put_image, base->c, img->pixmap, gc, (uint16_t)size.width,
+-	    (uint16_t)size.height, 0, 0, (uint16_t)size.width, (uint16_t)size.height, 0,
+-	    0, (uint8_t)bpp * 8, XCB_IMAGE_FORMAT_Z_PIXMAP, 0, xd->shm_seg_id, 0);
++	bool success = true;
++	size_t pitch = (size_t)stride * bpp;
++	size_t rows_per_request = pitch > 0 ? 200000 / pitch : 1;
++	if (rows_per_request < 1) {
++		rows_per_request = 1;
++	}
++	for (size_t y = 0; y < (size_t)size.height && success; y += rows_per_request) {
++		size_t n = (size_t)size.height - y < rows_per_request ? (size_t)size.height - y : rows_per_request;
++		success = XCB_AWAIT_VOID(xcb_put_image, base->c, XCB_IMAGE_FORMAT_Z_PIXMAP,
++		                         img->pixmap, gc, (uint16_t)size.width, (uint16_t)n,
++		                         0, (int16_t)y, 0, (uint8_t)bpp * 8,
++		                         (uint32_t)(n * pitch), pixels + y * pitch);
++	}
+ 	xcb_free_gc(base->c->c, gc);
+ 
+ 	if (!success) {

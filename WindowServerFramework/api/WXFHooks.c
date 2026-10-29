@@ -68,6 +68,9 @@ HOOK_DECL(WXFCAContext, Destroy)
 HOOK_DECL(WXFDecor, FrameShape)
 HOOK_DECL(WXFDecor, FrameBounds)
 
+// Display hotplug (WXFCard.m)
+HOOK_DECL(WXFCard, Hotplug)
+
 // --- Table ----------------------------------------------------------------------------------
 typedef struct {
     WXFHookGroup group;
@@ -154,6 +157,12 @@ static const WXFHookEntry kHooks[] = {
     // ca_window_prep_ingestion_phase makes it the bounds of the window's CARenderUpdateBegin2; nothing
     // outside it is rendered.
     HOOK(WXFHookGroupDecor, WXFDecor, FrameBounds, "__ZNK9CGXWindow12frame_boundsEv")
+
+    // -- Display hotplug. CAWSManager::process_hotplug_event(manager, displayId, state, reason,
+    // bool) -> bool: where a connector's connect (state 1) or disconnect (0) is carried out,
+    // whether the display raised it or CAWSManager::inject_hotplug did.
+    HOOK(WXFHookGroupCardHotplug, WXFCard, Hotplug,
+         "__ZN2WS8Displays11CAWSManager21process_hotplug_eventEi33CAWindowServerDisplayHotPlugStatejb")
 };
 
 // --- Installation ---------------------------------------------------------------------------

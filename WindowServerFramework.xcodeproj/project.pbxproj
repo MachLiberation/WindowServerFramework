@@ -20,7 +20,13 @@
 		9DF6721D309100010028DE21 /* Tweak.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF6721B309100010028DE21 /* Tweak.m */; };
 		9DF6721E309100010028DE21 /* WindowServerFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */; };
 		9DF67A1D309100010028DE21 /* Tweak.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF67A1B309100010028DE21 /* Tweak.m */; };
+		9DF67D1D309100010028DE21 /* Tweak.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF67D1B309100010028DE21 /* Tweak.m */; };
 		9DF67A1E309100010028DE21 /* WindowServerFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */; };
+		9DF67D1E309100010028DE21 /* WindowServerFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */; };
+		9DF67E1D309100010028DE21 /* Tweak.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF67E1B309100010028DE21 /* Tweak.m */; };
+		9DF67E1E309100010028DE21 /* WindowServerFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */; };
+		9DF67F1D309100010028DE21 /* Tweak.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF67F1B309100010028DE21 /* Tweak.m */; };
+		9DF67F1E309100010028DE21 /* WindowServerFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */; };
 		9DF67B1D309100010028DE21 /* Tweak.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF67B1B309100010028DE21 /* Tweak.m */; };
 		9DF67B1E309100010028DE21 /* WindowServerFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */; };
 		9DF67C30309100010028DE21 /* Tweak.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF67C10309100010028DE21 /* Tweak.m */; };
@@ -31,6 +37,8 @@
 		9DF67C35309100010028DE21 /* TBTray.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF67C19309100010028DE21 /* TBTray.m */; };
 		9DF67C3A309100010028DE21 /* TBAppMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF67C3B309100010028DE21 /* TBAppMenu.m */; };
 		9DF67C50309100010028DE21 /* WindowServerFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18432AC9308FBCA3000F9648 /* WindowServerFramework.framework */; };
+		9DF6801A309100010028DE21 /* XBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF68011309100010028DE21 /* XBridge.m */; };
+		9DF6801B309100010028DE21 /* XBX11.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF68013309100010028DE21 /* XBX11.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,7 +61,15 @@
 		9DF6721A309100010028DE21 /* libNiriKnockoffExample.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libNiriKnockoffExample.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DF6721B309100010028DE21 /* Tweak.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tweak.m; sourceTree = "<group>"; };
 		9DF67A1A309100010028DE21 /* libDecorExample.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libDecorExample.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		9DF67D1A309100010028DE21 /* libCardExample.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libCardExample.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DF67A1B309100010028DE21 /* Tweak.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tweak.m; sourceTree = "<group>"; };
+		9DF67D1B309100010028DE21 /* Tweak.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tweak.m; sourceTree = "<group>"; };
+		9DF67E1A309100010028DE21 /* libCubeExample.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libCubeExample.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		9DF67E1B309100010028DE21 /* Tweak.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tweak.m; sourceTree = "<group>"; };
+		9DF67E27309100010028DE21 /* CubeExample.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = CubeExample.metal; sourceTree = "<group>"; };
+		9DF67F1A309100010028DE21 /* libXFCEExample.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libXFCEExample.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		9DF67F1B309100010028DE21 /* Tweak.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tweak.m; sourceTree = "<group>"; };
+		9DF67F27309100010028DE21 /* XFCEExample.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = XFCEExample.metal; sourceTree = "<group>"; };
 		9DF67B1A309100010028DE21 /* libDecorTabExample.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libDecorTabExample.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DF67B1B309100010028DE21 /* Tweak.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tweak.m; sourceTree = "<group>"; };
 		9DF67C01309100010028DE21 /* libTaskbarExample.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libTaskbarExample.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -70,6 +86,15 @@
 		9DF67C1A309100010028DE21 /* TBTray.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBTray.h; sourceTree = "<group>"; };
 		9DF67C3B309100010028DE21 /* TBAppMenu.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TBAppMenu.m; sourceTree = "<group>"; };
 		9DF67C3C309100010028DE21 /* TBAppMenu.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBAppMenu.h; sourceTree = "<group>"; };
+		9DF68010309100010028DE21 /* libXFCEBridge.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libXFCEBridge.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		9DF68011309100010028DE21 /* XBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XBridge.m; sourceTree = "<group>"; };
+		9DF68012309100010028DE21 /* XBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XBridge.h; sourceTree = "<group>"; };
+		9DF68013309100010028DE21 /* XBX11.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XBX11.m; sourceTree = "<group>"; };
+		9DF68014309100010028DE21 /* XBX11.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XBX11.h; sourceTree = "<group>"; };
+		9DF68015309100010028DE21 /* wxf-wallpaper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "wxf-wallpaper.m"; sourceTree = "<group>"; };
+		9DF68016309100010028DE21 /* wxf-xinput.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "wxf-xinput.c"; sourceTree = "<group>"; };
+		9DF68017309100010028DE21 /* xfce-session.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "xfce-session.sh"; sourceTree = "<group>"; };
+		9DF68018309100010028DE21 /* xfce-open.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "xfce-open.sh"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -80,6 +105,7 @@
 				api/include/WXFBase.h,
 				api/include/WXFBus.h,
 				api/include/WXFCAContextRetriever.h,
+				api/include/WXFCard.h,
 				api/include/WXFDecor.h,
 				api/include/WXFDock.h,
 				api/include/WXFDropdown.h,
@@ -150,6 +176,24 @@
 				9DF67A1E309100010028DE21 /* WindowServerFramework.framework in Frameworks */,
 			);
 		};
+		9DF67D21309100010028DE21 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+				9DF67D1E309100010028DE21 /* WindowServerFramework.framework in Frameworks */,
+			);
+		};
+		9DF67E21309100010028DE21 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+				9DF67E1E309100010028DE21 /* WindowServerFramework.framework in Frameworks */,
+			);
+		};
+		9DF67F21309100010028DE21 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+				9DF67F1E309100010028DE21 /* WindowServerFramework.framework in Frameworks */,
+			);
+		};
 		9DF67B21309100010028DE21 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
@@ -160,6 +204,11 @@
 			isa = PBXFrameworksBuildPhase;
 			files = (
 				9DF67C50309100010028DE21 /* WindowServerFramework.framework in Frameworks */,
+			);
+		};
+		9DF6801C309100010028DE21 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
 			);
 		};
 /* End PBXFrameworksBuildPhase section */
@@ -187,6 +236,9 @@
 				9DF6701C309100010028DE21 /* ExposeExample */,
 				9DF6721C309100010028DE21 /* NiriKnockoffExample */,
 				9DF67A1C309100010028DE21 /* DecorExample */,
+				9DF67D1C309100010028DE21 /* CardExample */,
+				9DF67E1C309100010028DE21 /* CubeExample */,
+				9DF67F1C309100010028DE21 /* XFCEExample */,
 				9DF67B1C309100010028DE21 /* DecorTabExample */,
 				9DF6711C309100010028DE21 /* MenuBarExample */,
 				9DF6713C309100010028DE21 /* CAContextExample */,
@@ -204,6 +256,10 @@
 				9DF6701A309100010028DE21 /* libExposeExample.dylib */,
 				9DF6721A309100010028DE21 /* libNiriKnockoffExample.dylib */,
 				9DF67A1A309100010028DE21 /* libDecorExample.dylib */,
+				9DF67D1A309100010028DE21 /* libCardExample.dylib */,
+				9DF67E1A309100010028DE21 /* libCubeExample.dylib */,
+				9DF67F1A309100010028DE21 /* libXFCEExample.dylib */,
+				9DF68010309100010028DE21 /* libXFCEBridge.dylib */,
 				9DF67B1A309100010028DE21 /* libDecorTabExample.dylib */,
 				9DF6711A309100010028DE21 /* libMenuBarExample.dylib */,
 				9DF6713A309100010028DE21 /* libCAContextExample.dylib */,
@@ -268,6 +324,40 @@
 			path = DecorExample;
 			sourceTree = "<group>";
 		};
+		9DF67D1C309100010028DE21 /* CardExample */ = {
+			isa = PBXGroup;
+			children = (
+				9DF67D1B309100010028DE21 /* Tweak.m */,
+			);
+			path = CardExample;
+			sourceTree = "<group>";
+		};
+		9DF67E1C309100010028DE21 /* CubeExample */ = {
+			isa = PBXGroup;
+			children = (
+				9DF67E1B309100010028DE21 /* Tweak.m */,
+				9DF67E27309100010028DE21 /* CubeExample.metal */,
+			);
+			path = CubeExample;
+			sourceTree = "<group>";
+		};
+		9DF67F1C309100010028DE21 /* XFCEExample */ = {
+			isa = PBXGroup;
+			children = (
+				9DF67F1B309100010028DE21 /* Tweak.m */,
+				9DF67F27309100010028DE21 /* XFCEExample.metal */,
+				9DF68011309100010028DE21 /* XBridge.m */,
+				9DF68012309100010028DE21 /* XBridge.h */,
+				9DF68013309100010028DE21 /* XBX11.m */,
+				9DF68014309100010028DE21 /* XBX11.h */,
+				9DF68015309100010028DE21 /* wxf-wallpaper.m */,
+				9DF68016309100010028DE21 /* wxf-xinput.c */,
+				9DF68017309100010028DE21 /* xfce-session.sh */,
+				9DF68018309100010028DE21 /* xfce-open.sh */,
+			);
+			path = XFCEExample;
+			sourceTree = "<group>";
+		};
 		9DF67B1C309100010028DE21 /* DecorTabExample */ = {
 			isa = PBXGroup;
 			children = (
@@ -330,6 +420,21 @@
 			);
 		};
 		9DF67A1F309100010028DE21 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			files = (
+			);
+		};
+		9DF67D1F309100010028DE21 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			files = (
+			);
+		};
+		9DF67E1F309100010028DE21 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			files = (
+			);
+		};
+		9DF67F1F309100010028DE21 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			files = (
 			);
@@ -457,6 +562,53 @@
 			productReference = 9DF67A1A309100010028DE21 /* libDecorExample.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
+		9DF67D22309100010028DE21 /* CardExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9DF67D23309100010028DE21 /* Build configuration list for PBXNativeTarget "CardExample" */;
+			buildPhases = (
+				9DF67D1F309100010028DE21 /* Headers */,
+				9DF67D20309100010028DE21 /* Sources */,
+				9DF67D21309100010028DE21 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			name = CardExample;
+			productName = CardExample;
+			productReference = 9DF67D1A309100010028DE21 /* libCardExample.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		9DF67E22309100010028DE21 /* CubeExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9DF67E23309100010028DE21 /* Build configuration list for PBXNativeTarget "CubeExample" */;
+			buildPhases = (
+				9DF67E26309100010028DE21 /* Compile cube shader */,
+				9DF67E1F309100010028DE21 /* Headers */,
+				9DF67E20309100010028DE21 /* Sources */,
+				9DF67E21309100010028DE21 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			name = CubeExample;
+			productName = CubeExample;
+			productReference = 9DF67E1A309100010028DE21 /* libCubeExample.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		9DF67F22309100010028DE21 /* XFCEExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9DF67F23309100010028DE21 /* Build configuration list for PBXNativeTarget "XFCEExample" */;
+			buildPhases = (
+				9DF67F26309100010028DE21 /* Compile xfce shader */,
+				9DF67F1F309100010028DE21 /* Headers */,
+				9DF67F20309100010028DE21 /* Sources */,
+				9DF67F21309100010028DE21 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			name = XFCEExample;
+			productName = XFCEExample;
+			productReference = 9DF67F1A309100010028DE21 /* libXFCEExample.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
 		9DF67B22309100010028DE21 /* DecorTabExample */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9DF67B23309100010028DE21 /* Build configuration list for PBXNativeTarget "DecorTabExample" */;
@@ -485,6 +637,20 @@
 			name = TaskbarExample;
 			productName = TaskbarExample;
 			productReference = 9DF67C01309100010028DE21 /* libTaskbarExample.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		9DF68020309100010028DE21 /* XFCEBridge */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9DF68021309100010028DE21 /* Build configuration list for PBXNativeTarget "XFCEBridge" */;
+			buildPhases = (
+				9DF6801D309100010028DE21 /* Sources */,
+				9DF6801C309100010028DE21 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			name = XFCEBridge;
+			productName = XFCEBridge;
+			productReference = 9DF68010309100010028DE21 /* libXFCEBridge.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
 /* End PBXNativeTarget section */
@@ -517,6 +683,18 @@
 					9DF67A22309100010028DE21 = {
 						CreatedOnToolsVersion = 27.1;
 					};
+					9DF67D22309100010028DE21 = {
+						CreatedOnToolsVersion = 27.1;
+					};
+					9DF67E22309100010028DE21 = {
+						CreatedOnToolsVersion = 27.1;
+					};
+					9DF67F22309100010028DE21 = {
+						CreatedOnToolsVersion = 27.1;
+					};
+					9DF68020309100010028DE21 = {
+						CreatedOnToolsVersion = 27.1;
+					};
 					9DF67B22309100010028DE21 = {
 						CreatedOnToolsVersion = 27.1;
 					};
@@ -544,6 +722,10 @@
 				9DF67022309100010028DE21 /* ExposeExample */,
 				9DF67222309100010028DE21 /* NiriKnockoffExample */,
 				9DF67A22309100010028DE21 /* DecorExample */,
+				9DF67D22309100010028DE21 /* CardExample */,
+				9DF67E22309100010028DE21 /* CubeExample */,
+				9DF67F22309100010028DE21 /* XFCEExample */,
+				9DF68020309100010028DE21 /* XFCEBridge */,
 				9DF67B22309100010028DE21 /* DecorTabExample */,
 				9DF67122309100010028DE21 /* MenuBarExample */,
 				9DF67142309100010028DE21 /* CAContextExample */,
@@ -563,6 +745,40 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		9DF67F26309100010028DE21 /* Compile xfce shader */ = {
+			isa = PBXShellScriptBuildPhase;
+			inputPaths = (
+				"$(SRCROOT)/XFCEExample/XFCEExample.metal",
+			);
+			name = "Compile xfce shader";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/XFCEExample.metallib",
+			);
+			shellPath = /bin/sh;
+			shellScript = (
+				"set -e",
+				"xcrun -sdk macosx metal -c \"$SRCROOT/XFCEExample/XFCEExample.metal\" -o \"$TARGET_TEMP_DIR/XFCEExample.air\"",
+				"xcrun -sdk macosx metallib \"$TARGET_TEMP_DIR/XFCEExample.air\" -o \"$DERIVED_FILE_DIR/XFCEExample.metallib\"",
+				"",
+			);
+		};
+		9DF67E26309100010028DE21 /* Compile cube shader */ = {
+			isa = PBXShellScriptBuildPhase;
+			inputPaths = (
+				"$(SRCROOT)/CubeExample/CubeExample.metal",
+			);
+			name = "Compile cube shader";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/CubeExample.metallib",
+			);
+			shellPath = /bin/sh;
+			shellScript = (
+				"set -e",
+				"xcrun -sdk macosx metal -c \"$SRCROOT/CubeExample/CubeExample.metal\" -o \"$TARGET_TEMP_DIR/CubeExample.air\"",
+				"xcrun -sdk macosx metallib \"$TARGET_TEMP_DIR/CubeExample.air\" -o \"$DERIVED_FILE_DIR/CubeExample.metallib\"",
+				"",
+			);
+		};
 		9DF66F11308FE7F00028DE21 /* Compile drag shader */ = {
 			isa = PBXShellScriptBuildPhase;
 			inputPaths = (
@@ -625,6 +841,24 @@
 				9DF67A1D309100010028DE21 /* Tweak.m in Sources */,
 			);
 		};
+		9DF67D20309100010028DE21 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+				9DF67D1D309100010028DE21 /* Tweak.m in Sources */,
+			);
+		};
+		9DF67E20309100010028DE21 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+				9DF67E1D309100010028DE21 /* Tweak.m in Sources */,
+			);
+		};
+		9DF67F20309100010028DE21 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+				9DF67F1D309100010028DE21 /* Tweak.m in Sources */,
+			);
+		};
 		9DF67B20309100010028DE21 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			files = (
@@ -641,6 +875,13 @@
 				9DF67C35309100010028DE21 /* TBTray.m in Sources */,
 				9DF67C3A309100010028DE21 /* TBAppMenu.m in Sources */,
 				9DF67C34309100010028DE21 /* TBAgent.m in Sources */,
+			);
+		};
+		9DF6801D309100010028DE21 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+				9DF6801A309100010028DE21 /* XBridge.m in Sources */,
+				9DF6801B309100010028DE21 /* XBX11.m in Sources */,
 			);
 		};
 /* End PBXSourcesBuildPhase section */
@@ -1006,6 +1247,20 @@
 			};
 			name = Debug;
 		};
+		9DF67D24309100010028DE21 /* Debug configuration for PBXNativeTarget "CardExample" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				MACH_O_TYPE = mh_dylib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
 		9DF67A25309100010028DE21 /* Release configuration for PBXNativeTarget "DecorExample" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1015,6 +1270,116 @@
 				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_PREFIX = lib;
 				MACH_O_TYPE = mh_dylib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		9DF67D25309100010028DE21 /* Release configuration for PBXNativeTarget "CardExample" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				MACH_O_TYPE = mh_dylib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		9DF67E24309100010028DE21 /* Debug configuration for PBXNativeTarget "CubeExample" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				MACH_O_TYPE = mh_dylib;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__DATA,
+					__wxf_shader,
+					"$(DERIVED_FILE_DIR)/CubeExample.metallib",
+					"-framework",
+					Metal,
+					"-framework",
+					IOSurface,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		9DF67E25309100010028DE21 /* Release configuration for PBXNativeTarget "CubeExample" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				MACH_O_TYPE = mh_dylib;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__DATA,
+					__wxf_shader,
+					"$(DERIVED_FILE_DIR)/CubeExample.metallib",
+					"-framework",
+					Metal,
+					"-framework",
+					IOSurface,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		9DF67F24309100010028DE21 /* Debug configuration for PBXNativeTarget "XFCEExample" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				MACH_O_TYPE = mh_dylib;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__DATA,
+					__wxf_shader,
+					"$(DERIVED_FILE_DIR)/XFCEExample.metallib",
+					"-framework",
+					Metal,
+					"-framework",
+					IOSurface,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		9DF67F25309100010028DE21 /* Release configuration for PBXNativeTarget "XFCEExample" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				MACH_O_TYPE = mh_dylib;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__DATA,
+					__wxf_shader,
+					"$(DERIVED_FILE_DIR)/XFCEExample.metallib",
+					"-framework",
+					Metal,
+					"-framework",
+					IOSurface,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -1082,6 +1447,58 @@
 					AppKit,
 					"-framework",
 					QuartzCore,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		9DF68022309100010028DE21 /* Debug configuration for PBXNativeTarget "XFCEBridge" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				MACH_O_TYPE = mh_dylib;
+				OTHER_LDFLAGS = (
+					"-framework",
+					AppKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					QuartzCore,
+					"-framework",
+					IOSurface,
+					"-framework",
+					CoreGraphics,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		9DF68023309100010028DE21 /* Release configuration for PBXNativeTarget "XFCEBridge" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				MACH_O_TYPE = mh_dylib;
+				OTHER_LDFLAGS = (
+					"-framework",
+					AppKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					QuartzCore,
+					"-framework",
+					IOSurface,
+					"-framework",
+					CoreGraphics,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1161,6 +1578,30 @@
 			);
 			defaultConfigurationName = Release;
 		};
+		9DF67D23309100010028DE21 /* Build configuration list for PBXNativeTarget "CardExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9DF67D24309100010028DE21 /* Debug configuration for PBXNativeTarget "CardExample" */,
+				9DF67D25309100010028DE21 /* Release configuration for PBXNativeTarget "CardExample" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		9DF67E23309100010028DE21 /* Build configuration list for PBXNativeTarget "CubeExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9DF67E24309100010028DE21 /* Debug configuration for PBXNativeTarget "CubeExample" */,
+				9DF67E25309100010028DE21 /* Release configuration for PBXNativeTarget "CubeExample" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		9DF67F23309100010028DE21 /* Build configuration list for PBXNativeTarget "XFCEExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9DF67F24309100010028DE21 /* Debug configuration for PBXNativeTarget "XFCEExample" */,
+				9DF67F25309100010028DE21 /* Release configuration for PBXNativeTarget "XFCEExample" */,
+			);
+			defaultConfigurationName = Release;
+		};
 		9DF67B23309100010028DE21 /* Build configuration list for PBXNativeTarget "DecorTabExample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -1176,6 +1617,14 @@
 			buildConfigurations = (
 				9DF67C08309100010028DE21 /* Debug configuration for PBXNativeTarget "TaskbarExample" */,
 				9DF67C09309100010028DE21 /* Release configuration for PBXNativeTarget "TaskbarExample" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		9DF68021309100010028DE21 /* Build configuration list for PBXNativeTarget "XFCEBridge" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9DF68022309100010028DE21 /* Debug configuration for PBXNativeTarget "XFCEBridge" */,
+				9DF68023309100010028DE21 /* Release configuration for PBXNativeTarget "XFCEBridge" */,
 			);
 			defaultConfigurationName = Release;
 		};

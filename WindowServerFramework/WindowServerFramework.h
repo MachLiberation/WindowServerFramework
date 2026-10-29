@@ -17,6 +17,7 @@ FOUNDATION_EXPORT const unsigned char WindowServerFrameworkVersionString[];
 #import <WindowServerFramework/WXFBase.h>
 #import <WindowServerFramework/WXFBus.h>
 #import <WindowServerFramework/WXFCAContextRetriever.h>
+#import <WindowServerFramework/WXFCard.h>
 #import <WindowServerFramework/WXFEvent.h>
 #import <WindowServerFramework/WXFExpose.h>
 #import <WindowServerFramework/WXFHost.h>

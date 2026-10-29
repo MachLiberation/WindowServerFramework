@@ -58,6 +58,11 @@ fi
 # app that is already running has to be relaunched to get it.
 whitelist_for() {
     case "$1" in
+        # The apps XFCEExample/xfce-open.sh can put on the X session (it only acts in an app started
+        # that way). Sandboxed apps (TextEdit, Calculator, Notes, ...) are not listed: the sandbox
+        # blocks their connection to the X server.
+        XFCEExample) printf '%s\n' WindowServer Terminal "Activity Monitor" Console "Disk Utility" \
+            "Font Book" Automator "Script Editor" "Keychain Access" Finder ;;
         TaskbarExample) printf '%s\n' WindowServer MenuBarAgent Finder TextEdit Safari Terminal iTerm2 \
             "Brave Browser" "Activity Monitor" "GitHub Desktop" Claude Xcode ;;
         *) echo "WindowServer" ;;
@@ -99,6 +104,18 @@ for NAME in $NAMES; do
         grep -qxF "$PROC" "$TWEAKS/lib$NAME.dylib.whitelist" || echo "$PROC" >> "$TWEAKS/lib$NAME.dylib.whitelist"
     done
     file "$TWEAKS/lib$NAME.dylib" | sed 's|^.*/||'
+done
+
+# XFCEExample's app half is a second dylib, the XFCEBridge target (the XFCEExample scheme builds it
+# first): it links AppKit, which WindowServer must not load, so it sits in a folder of its own.
+for NAME in $NAMES; do
+    [ "$NAME" = XFCEExample ] || continue
+    [ -f "$PRODUCTS/libXFCEBridge.dylib" ] || { echo "build produced no libXFCEBridge.dylib" >&2; exit 1; }
+    mkdir -p "$TWEAKS/XFCEExample.support"
+    codesign -f -s - "$PRODUCTS/libXFCEBridge.dylib"
+    cp "$PRODUCTS/libXFCEBridge.dylib" "$TWEAKS/XFCEExample.support/.libXFCEBridge.dylib.new"
+    mv -f "$TWEAKS/XFCEExample.support/.libXFCEBridge.dylib.new" "$TWEAKS/XFCEExample.support/libXFCEBridge.dylib"
+    echo "installed $TWEAKS/XFCEExample.support/libXFCEBridge.dylib"
 done
 
 if [ "$RESTART" = 1 ]; then
